@@ -1,0 +1,111 @@
+#pragma once
+
+#include "vkl_core.h"
+
+namespace vkl {
+	inline bool checkPhysicalDeviceExtensionSupport(const VkInstance instance, const VkPhysicalDevice device, uint32_t extension_count, const char* const* extensions) {
+		bool support = true;
+		uint32_t available_extension_count;
+		vkEnumerateDeviceExtensionProperties(device, nullptr, &available_extension_count, nullptr);
+		VkExtensionProperties* available_extensions = new VkExtensionProperties[available_extension_count];
+		vkEnumerateDeviceExtensionProperties(device, nullptr, &available_extension_count, available_extensions);
+		for (uint32_t i = 0; i < extension_count; ++i) {
+			bool extension_supported = false;
+			for (uint32_t j = 0; j < available_extension_count; ++j) {
+				if (strcmp(available_extensions[j].extensionName, extensions[i]) == 0) {
+					extension_supported = true;
+					break;
+				}
+			}
+			if (!extension_supported) {
+				support = false;
+				break;
+			};
+		}
+		delete[] available_extensions;
+		return support;
+	}
+	inline bool checkPhysicalDeviceSurfaceSupport(const VkPhysicalDevice device, const VkSurfaceKHR surface) {
+		bool surface_support = false;
+		uint32_t count = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &count, nullptr);
+		for (uint32_t i = 0; i < count; ++i) {
+			VkBool32 support = VK_FALSE;
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &support);
+			if (support == VK_TRUE) {
+				surface_support = true;
+				break;
+			}
+		}
+		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &count, nullptr);
+		if (count == 0) {
+			surface_support = false;
+		}
+		return surface_support;
+	}
+	inline VkPhysicalDevice getPhysicalDevice(const VkInstance instance, const VkSurfaceKHR surface, uint32_t extension_count, const char* const* extensions) {
+		uint32_t device_count;
+		vkEnumeratePhysicalDevices(instance, &device_count, nullptr);
+		VkPhysicalDevice* devices = new VkPhysicalDevice[device_count];
+		vkEnumeratePhysicalDevices(instance, &device_count, devices);
+		VkPhysicalDevice suitable_device = VK_NULL_HANDLE;
+		for (uint32_t k = 0; k < device_count; ++k) {
+			VkPhysicalDevice& device = devices[k];
+			bool suitable = checkPhysicalDeviceExtensionSupport(instance, device, extension_count, extensions);
+			if (surface != nullptr) {
+				suitable = suitable && checkPhysicalDeviceSurfaceSupport(device, surface);
+			}
+			if (suitable) {
+				suitable_device = device;
+				break;
+			}
+		}
+		delete[] devices;
+		return suitable_device;
+	}
+	inline std::vector<VkPhysicalDevice> getPhysicalDevices(const VkInstance instance, const VkSurfaceKHR surface, uint32_t extension_count, const char* const* extensions) {
+		uint32_t device_count;
+		vkEnumeratePhysicalDevices(instance, &device_count, nullptr);
+		VkPhysicalDevice* devices = new VkPhysicalDevice[device_count];
+		std::vector<VkPhysicalDevice> suitable_devices;
+		suitable_devices.reserve(device_count);
+		vkEnumeratePhysicalDevices(instance, &device_count, devices);
+		for (uint32_t k = 0; k < device_count; ++k) {
+			VkPhysicalDevice& device = devices[k];
+			bool suitable = checkPhysicalDeviceExtensionSupport(instance, device, extension_count, extensions);
+			if (surface != nullptr) {
+				suitable = suitable && checkPhysicalDeviceSurfaceSupport(device, surface);
+			}
+			if (suitable) {
+				suitable_devices.push_back(device);
+				break;
+			}
+		}
+		delete[] devices;
+		suitable_devices.shrink_to_fit();
+		return suitable_devices;
+	}
+	inline VkDevice createLogicalDevice(const VkPhysicalDevice physical_device, const VkSurfaceKHR surface, const VkPhysicalDeviceFeatures& enabled_features, uint32_t extension_count, const char* const* extensions, uint32_t queue_info_count, VkDeviceQueueCreateInfo* queue_infos) {
+		VkDeviceCreateInfo create_info{};
+		create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+		create_info.queueCreateInfoCount = queue_info_count;
+		create_info.pQueueCreateInfos = queue_infos;
+		create_info.pEnabledFeatures = &enabled_features;
+		create_info.enabledExtensionCount = extension_count;
+		create_info.ppEnabledExtensionNames = extensions;
+
+#ifdef VKL_ENABLE_VALIDATION
+		create_info.enabledLayerCount = 1;
+		create_info.ppEnabledLayerNames = &VK_VALIDATION_LAYER;
+#else
+		create_info.enabledLayerCount = 0;
+#endif
+		VkDevice device;
+		if (vkCreateDevice(physical_device, &create_info, VKL_Callbacks, &device) != VK_SUCCESS) {
+			return VK_NULL_HANDLE;
+		}
+		else {
+			return device;
+		}
+	}
+}
