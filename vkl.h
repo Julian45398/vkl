@@ -7,3 +7,4 @@
 #include "vkl/render_pass.h"
 #include "vkl/buffer.h"
 #include "vkl/image.h"
+#include "vkl/memory.h"
