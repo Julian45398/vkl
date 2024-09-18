@@ -17,7 +17,16 @@
 
 #include <vector>
 
+#ifdef VKL_CHECK_SUCCESS
+#define VKL_RETURN(X, Y) do {if (X != VK_SUCCESS) {return VK_NULL_HANDLE;} else {return Y;} } while (0)
+#else
+#define VKL_RETURN(X, Y) do { X; return Y; } while (0)
+#endif
+
 namespace vkl {
+#ifdef VKL_ENABLE_VALIDATION
+	inline const char* VKL_VALIDATION_LAYER_NAME = "VK_LAYER_KHRONOS_validation";
+#endif
 	inline const VkAllocationCallbacks* VKL_Callbacks = nullptr;
 	inline void setAllocationCallbacks(const VkAllocationCallbacks* pCallbacks) {
 		VKL_Callbacks = pCallbacks;

@@ -1,16 +1,16 @@
 #pragma once
 
 #include "vkl_core.h"
+#include <assert.h>
 
 namespace vkl {
 #ifdef VKL_ENABLE_VALIDATION
-	inline const char* VKL_VALIDATION_LAYER_NAME = "VK_LAYER_KHRONOS_validation";
-	inline VkDebugUtilsMessengerEXT createDebugUtilsMessengerEXT(const VkInstance instance, PFN_vkDebugUtilsMessengerCallbackEXT debug_callback) {
+	inline VkDebugUtilsMessengerEXT createDebugUtilsMessengerEXT(const VkInstance instance, PFN_vkDebugUtilsMessengerCallbackEXT debugCallback) {
 		VkDebugUtilsMessengerCreateInfoEXT create_info = {
 			VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT, nullptr, 0,
 			VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
 			VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
-			debug_callback, nullptr
+			debugCallback, nullptr
 		};
 		auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 
@@ -30,27 +30,27 @@ namespace vkl {
 	}
 #endif
 #ifdef VKL_ENABLE_VALIDATION
-	inline VkInstance createInstance(uint32_t vulkan_version, uint32_t extension_count, const char* const* extensions, PFN_vkDebugUtilsMessengerCallbackEXT debug_callback) {
+	inline VkInstance createInstance(uint32_t apiVersion, uint32_t extensionCount, const char* const* pExtensions, PFN_vkDebugUtilsMessengerCallbackEXT debugCallback) {
+		assert(debugCallback != nullptr);
 #else
-	inline VkInstance createInstance(uint32_t vulkan_version, uint32_t extension_count, const char* const* extensions) {
+	inline VkInstance createInstance(uint32_t apiVersion, uint32_t extensionCount, const char* const* pExtensions) {
 #endif
-		VkApplicationInfo app_info{
-			VK_STRUCTURE_TYPE_APPLICATION_INFO, nullptr, VKL_APPLICATION_NAME, VKL_APPLICATION_VERSION, VKL_ENGINE_NAME, VKL_ENGINE_VERSION, vulkan_version
+
+		assert(!(pExtensions == nullptr && extensionCount != 0));
+		VkApplicationInfo app_info {
+			VK_STRUCTURE_TYPE_APPLICATION_INFO, nullptr, VKL_APPLICATION_NAME, VKL_APPLICATION_VERSION, VKL_ENGINE_NAME, VKL_ENGINE_VERSION, apiVersion 
 		};
-		
 		VkInstanceCreateInfo create_info{};
 		create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-		create_info.enabledExtensionCount = extension_count;
-		create_info.ppEnabledExtensionNames = extensions;
-
+		create_info.enabledExtensionCount = extensionCount;
+		create_info.ppEnabledExtensionNames = pExtensions;
 #ifdef VKL_ENABLE_VALIDATION
 		VkDebugUtilsMessengerCreateInfoEXT debug_info = {
 			VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT, nullptr, 0,
 			VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
 			VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
-			debug_callback, nullptr
+			debugCallback, nullptr
 		};
-
 		create_info.pNext = &debug_info;
 		create_info.enabledLayerCount = 1;
 		create_info.ppEnabledExtensionNames = &VKL_VALIDATION_LAYER_NAME;
@@ -59,13 +59,8 @@ namespace vkl {
 		create_info.enabledLayerCount = 0;
 		create_info.ppEnabledExtensionNames = nullptr;
 #endif
-		VkInstance instance;
-		if (vkCreateInstance(&create_info, VKL_Callbacks, &instance) != VK_SUCCESS) {
-			return VK_NULL_HANDLE;
-		}
-		else {
-			return instance;
-		}
+		VkInstance instance = VK_NULL_HANDLE;
+		VKL_RETURN(vkCreateInstance(&create_info, VKL_Callbacks, &instance), instance);
 	}
 	inline void destroyInstance(VkInstance instance) {
 		vkDestroyInstance(instance, VKL_Callbacks);
