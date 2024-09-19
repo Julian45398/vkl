@@ -23,6 +23,8 @@
 #define VKL_RETURN(X, Y) do { X; return Y; } while (0)
 #endif
 
+#define VKL_FLAG_NONE 0
+
 namespace vkl {
 #ifdef VKL_ENABLE_VALIDATION
 	inline const char* VKL_VALIDATION_LAYER_NAME = "VK_LAYER_KHRONOS_validation";

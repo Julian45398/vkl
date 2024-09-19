@@ -23,6 +23,38 @@ namespace vkl {
 			VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO, pNext, flags, queueFamilyIndex, queueCount, pQueuePriorities
 		};
 	}
+	inline std::vector<VkQueueFamilyProperties> getQueueFamilyProperties(VkPhysicalDevice physicalDevice) {
+		uint32_t count = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &count, nullptr);
+		std::vector<VkQueueFamilyProperties> queue_families(count);
+		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &count, queue_families.data());
+		return queue_families;
+	}
+	inline bool getPhysicalDeviceSurfaceSupportKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t queueFamilyIndex) {
+			VkBool32 support = VK_FALSE;
+			vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, queueFamilyIndex, surface, &support);
+			return support == VK_TRUE;
+	}
+	inline uint32_t findSuitableQueueIndex (VkPhysicalDevice physicalDevice, VkQueueFlagBits flagBits) {
+		std::vector<VkQueueFamilyProperties> queue_properties = getQueueFamilyProperties(physicalDevice);
+		for (uint32_t i = 0; i < queue_properties.size(); ++i) {
+			if (queue_properties[i].queueFlags & flagBits) {
+				return i;
+			}
+		}
+		return UINT32_MAX;
+	}
+	inline uint32_t getPresentQueueFamilyIndex(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface) {
+		std::vector<VkQueueFamilyProperties> queue_properties = getQueueFamilyProperties(physicalDevice);
+		for (uint32_t i = 0; i < queue_properties.size(); ++i) {
+			VkBool32 support = VK_FALSE;
+			vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, surface, &support);
+			if (support) {
+				return i;
+			}
+		}
+		return UINT32_MAX;
+	}
 	inline bool checkPhysicalDeviceExtensionSupport(const VkInstance instance, const VkPhysicalDevice device, uint32_t extensionCount, const char* const* pExtensions) {
 		bool support = true;
 		uint32_t available_extension_count;
