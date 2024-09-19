@@ -2,6 +2,7 @@
 
 #include "vkl_core.h"
 #include <assert.h>
+#include <iostream>
 
 namespace vkl {
 #ifdef VKL_ENABLE_VALIDATION
@@ -51,14 +52,18 @@ namespace vkl {
 			VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
 			debugCallback, nullptr
 		};
+		assert(extensionCount != 0);
+		assert(pExtensions != nullptr);
+
 		create_info.pNext = &debug_info;
 		create_info.enabledLayerCount = 1;
-		create_info.ppEnabledExtensionNames = &VKL_VALIDATION_LAYER_NAME;
+		create_info.ppEnabledLayerNames = &VKL_VALIDATION_LAYER_NAME;
 #else
 		create_info.pNext = nullptr;
 		create_info.enabledLayerCount = 0;
 		create_info.ppEnabledExtensionNames = nullptr;
 #endif
+
 		VkInstance instance = VK_NULL_HANDLE;
 		VKL_RETURN(vkCreateInstance(&create_info, VKL_Callbacks, &instance), instance);
 	}

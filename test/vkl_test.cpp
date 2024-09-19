@@ -13,7 +13,10 @@ VkBool32 VKAPI_PTR debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageS
 
 int main()
 {
-	VkInstance instance = vkl::createInstance(VK_VERSION_1_0, 0, nullptr, debugCallback);
+	const char* extensions[] = {
+		VK_EXT_DEBUG_UTILS_EXTENSION_NAME
+	};
+	VkInstance instance = vkl::createInstance(VK_VERSION_1_0, 1, extensions, debugCallback);
 	if (instance == VK_NULL_HANDLE) {
 		std::cout << "failed to create vulkan instance" << std::endl;
 	}
