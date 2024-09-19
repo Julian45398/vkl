@@ -35,7 +35,7 @@ namespace vkl {
 			vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, queueFamilyIndex, surface, &support);
 			return support == VK_TRUE;
 	}
-	inline uint32_t findSuitableQueueIndex (VkPhysicalDevice physicalDevice, VkQueueFlagBits flagBits) {
+	inline uint32_t getQueueIndex(VkPhysicalDevice physicalDevice, VkQueueFlags flagBits) {
 		std::vector<VkQueueFamilyProperties> queue_properties = getQueueFamilyProperties(physicalDevice);
 		for (uint32_t i = 0; i < queue_properties.size(); ++i) {
 			if (queue_properties[i].queueFlags & flagBits) {
