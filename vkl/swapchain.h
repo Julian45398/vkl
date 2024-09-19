@@ -3,7 +3,7 @@
 #include "vkl_core.h"
 
 namespace vkl {
-	VkSwapchainKHR createSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkExtent2D extent, uint32_t presentQueueFamilyIndex, uint32_t graphicsQueueFamilyIndex, uint32_t presentModeCount, const VkPresentModeKHR* presentModes, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE) {
+	inline VkSwapchainKHR createSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkExtent2D extent, uint32_t presentQueueFamilyIndex, uint32_t graphicsQueueFamilyIndex, uint32_t presentModeCount, const VkPresentModeKHR* presentModes, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE) {
 		VkSwapchainCreateInfoKHR create_info{};
 		create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 		create_info.oldSwapchain = oldSwapchain;
