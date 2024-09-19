@@ -13,6 +13,16 @@ namespace vkl {
 		vkGetPhysicalDeviceProperties(physicalDevice, &properties);
 		return properties;
 	}
+	inline VkDeviceQueueCreateInfo createDeviceQueueInfo(VkDeviceQueueCreateFlags flags, uint32_t queueFamilyIndex, const float& priority, const void* pNext = nullptr) {
+		return {
+			VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO, pNext, flags, queueFamilyIndex, 1, &priority
+		};
+	}
+	inline VkDeviceQueueCreateInfo createDeviceQueueInfo(VkDeviceQueueCreateFlags flags, uint32_t queueFamilyIndex, uint32_t queueCount, const float* pQueuePriorities, const void* pNext = nullptr) {
+		return {
+			VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO, pNext, flags, queueFamilyIndex, queueCount, pQueuePriorities
+		};
+	}
 	inline bool checkPhysicalDeviceExtensionSupport(const VkInstance instance, const VkPhysicalDevice device, uint32_t extensionCount, const char* const* pExtensions) {
 		bool support = true;
 		uint32_t available_extension_count;
