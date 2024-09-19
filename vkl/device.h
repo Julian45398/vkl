@@ -3,6 +3,16 @@
 #include "vkl_core.h"
 
 namespace vkl {
+	inline VkPhysicalDeviceFeatures getPhysicalDeviceFeatures(const VkPhysicalDevice physicalDevice) {
+		VkPhysicalDeviceFeatures features;
+		vkGetPhysicalDeviceFeatures(physicalDevice, &features);
+		return features;
+	}
+	inline VkPhysicalDeviceProperties getPhysicalDeviceProperties(const VkPhysicalDevice physicalDevice) {
+		VkPhysicalDeviceProperties properties;
+		vkGetPhysicalDeviceProperties(physicalDevice, &properties);
+		return properties;
+	}
 	inline bool checkPhysicalDeviceExtensionSupport(const VkInstance instance, const VkPhysicalDevice device, uint32_t extensionCount, const char* const* pExtensions) {
 		bool support = true;
 		uint32_t available_extension_count;
