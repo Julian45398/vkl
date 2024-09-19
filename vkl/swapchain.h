@@ -3,14 +3,14 @@
 #include "vkl_core.h"
 
 namespace vkl {
-	VkSwapchainKHR createSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkExtent2D extent, uint32_t presentQueueFamilyIndex, uint32_t graphicsQueueFamilyIndex, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE) {
+	VkSwapchainKHR createSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkExtent2D extent, uint32_t presentQueueFamilyIndex, uint32_t graphicsQueueFamilyIndex, uint32_t presentModeCount, const VkPresentModeKHR* presentModes, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE) {
 		VkSwapchainCreateInfoKHR create_info{};
 		create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 		create_info.oldSwapchain = oldSwapchain;
 		VkSurfaceCapabilitiesKHR capabilities;
 		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &capabilities);
 
-		VkPresentModeKHR present_mode = VK_PRESENT_MODE_FIFO_KHR;
+		VkPresentModeKHR present_mode = VK_PRESENT_MODE_MAX_ENUM_KHR;
 		{
 			uint32_t present_mode_count;
 			vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &present_mode_count, nullptr);
@@ -22,10 +22,21 @@ namespace vkl {
 				return VK_NULL_HANDLE;
 			}
 
-			for (const auto& available_present_mode : present_modes) {
-				if (available_present_mode == VK_PRESENT_MODE_MAILBOX_KHR) {
-					present_mode = available_present_mode;
+			for (uint32_t i = 0; i < presentModeCount; ++i) {
+				bool present_mode_found = false;
+				for (const auto& available_present_mode : present_modes) {
+					if (available_present_mode == presentModes[i]) {
+						present_mode = available_present_mode;
+						present_mode_found = true;
+						break;
+					}
 				}
+				if (present_mode_found) {
+					break;
+				}
+			}
+			if (present_mode == VK_PRESENT_MODE_MAX_ENUM_KHR) {
+				return VK_NULL_HANDLE;
 			}
 		}
 		uint32_t image_count = capabilities.minImageCount + 1;
