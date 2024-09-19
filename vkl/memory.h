@@ -51,6 +51,53 @@ namespace vkl {
 	inline VkDeviceMemory allocateForImage(VkDevice device, VkPhysicalDevice physicalDevice, VkImage image, VkMemoryPropertyFlags properties) {
 		return allocateMemory(device, physicalDevice, getImageMemoryRequirements(device, image), properties);
 	}
+	inline VkDeviceMemory allocateAndBind(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t bufferCount, const VkBuffer* buffers, uint32_t imageCount, const VkImage* images, VkMemoryPropertyFlags properties) {
+		VkMemoryRequirements mem_req{};
+		std::vector<VkDeviceSize> offsets(bufferCount + imageCount);
+		for (uint32_t i = 0; i < imageCount; ++i) {
+			VkMemoryRequirements req = getImageMemoryRequirements(device, images[i]);
+			if (mem_req.alignment < req.alignment) {
+				mem_req.alignment = req.alignment;
+			} 
+			VkDeviceSize t = mem_req.size % req.alignment;
+			if (t != 0) {
+				offsets[i] = mem_req.size + req.alignment - t;
+			}
+			else {
+				offsets[i] = mem_req.size;
+			}
+			mem_req.size = offsets[i] + req.size;
+		}
+		for (uint32_t i = 0; i < bufferCount; ++i) {
+			VkMemoryRequirements req = getBufferMemoryRequirements(device, buffers[i]);
+			if (mem_req.alignment < req.alignment) {
+				mem_req.alignment = req.alignment;
+			} 
+			VkDeviceSize t = mem_req.size % req.alignment;
+			if (t != 0) {
+				offsets[imageCount + i] = mem_req.size + req.alignment - t;
+			}
+			else {
+				offsets[imageCount + i] = mem_req.size;
+			}
+			mem_req.size = offsets[imageCount + i] + req.size;
+		}
+		VkDeviceSize t = mem_req.size % mem_req.alignment;
+		if (t != 0) {
+			mem_req.size += mem_req.alignment - t;
+		}
+		VkDeviceMemory memory = allocateMemory(device, physicalDevice, mem_req, properties);
+		if (!memory) {
+			return VK_NULL_HANDLE;
+		}
+		for (uint32_t i = 0; i < imageCount; ++i) {
+			vkBindImageMemory(device, images[i], memory, offsets[i]);
+		}
+		for (uint32_t i = 0; i < bufferCount; ++i) {
+			vkBindBufferMemory(device, buffers[i], memory, offsets[i + imageCount]);
+		}
+		return memory;
+	}
 	inline void freeMemory(VkDevice device, VkDeviceMemory memory) {
 		vkFreeMemory(device, memory, VKL_Callbacks);
 	}
