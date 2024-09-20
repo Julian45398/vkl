@@ -9,3 +9,4 @@
 #include "vkl/image.h"
 #include "vkl/memory.h"
 #include "vkl/pipeline.h"
+#include "vkl/commands.h"
