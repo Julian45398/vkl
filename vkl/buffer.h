@@ -3,7 +3,7 @@
 #include "vkl_core.h"
 
 namespace vkl {
-	inline VkBufferCreateInfo createBufferInfo(VkBufferCreateFlags flags, VkDeviceSize size, VkBufferUsageFlags usage, VkSharingMode sharingMode, uint32_t queueFamilyIndexCount, const uint32_t* pQueueFamilyIndices, const void* pNext = nullptr) {
+	inline VkBufferCreateInfo createBufferInfo(VkDeviceSize size, VkBufferUsageFlags usage, VkSharingMode sharingMode, uint32_t queueFamilyIndexCount, const uint32_t* pQueueFamilyIndices, VkBufferCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO, pNext, flags, size, usage, sharingMode, queueFamilyIndexCount, pQueueFamilyIndices 
 		};
@@ -14,7 +14,7 @@ namespace vkl {
 		return buffer;
 	}
 	inline VkBuffer createBufferInfo(VkDevice device, VkBufferCreateFlags flags, VkDeviceSize size, VkBufferUsageFlags usage, VkSharingMode sharingMode, uint32_t queueFamilyIndexCount, const uint32_t* pQueueFamilyIndices, const void* pNext = nullptr) {
-		VkBufferCreateInfo info = createBufferInfo(flags, size, usage, sharingMode, queueFamilyIndexCount, pQueueFamilyIndices, pNext);
+		VkBufferCreateInfo info = createBufferInfo(size, usage, sharingMode, queueFamilyIndexCount, pQueueFamilyIndices, flags, pNext);
 		VkBuffer buffer = VK_NULL_HANDLE;
 		VKL_RETURN(vkCreateBuffer(device, &info, VKL_Callbacks, &buffer), buffer);
 	}

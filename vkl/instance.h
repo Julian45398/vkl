@@ -61,7 +61,7 @@ namespace vkl {
 #else
 		create_info.pNext = nullptr;
 		create_info.enabledLayerCount = 0;
-		create_info.ppEnabledExtensionNames = nullptr;
+		create_info.ppEnabledLayerNames = nullptr;
 #endif
 
 		VkInstance instance = VK_NULL_HANDLE;

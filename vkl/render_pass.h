@@ -6,10 +6,10 @@ namespace vkl {
 	inline VkAttachmentReference createAttachmentReference(uint32_t attachment, VkImageLayout layout) {
 		return { attachment, layout };
 	}
-	inline VkAttachmentDescription createAttachmentDescription(VkAttachmentDescriptionFlags flags, VkFormat format, VkSampleCountFlagBits samples, 
+	inline VkAttachmentDescription createAttachmentDescription(VkFormat format, VkSampleCountFlagBits samples, 
 		VkAttachmentLoadOp loadOp, VkAttachmentStoreOp storeOp, 
 		VkAttachmentLoadOp stencilLoadOp, VkAttachmentStoreOp stencilStoreOp, 
-		VkImageLayout initialLayout, VkImageLayout finalLayout) {
+		VkImageLayout initialLayout, VkImageLayout finalLayout, VkAttachmentDescriptionFlags flags) {
 		return {
 			flags, format, samples,
 			loadOp, storeOp,
@@ -17,11 +17,11 @@ namespace vkl {
 			initialLayout, finalLayout
 		};
 	}
-	inline VkSubpassDescription createSubpassDescription(VkSubpassDescriptionFlags flags, VkPipelineBindPoint pipelineBindPoint, 
+	inline VkSubpassDescription createSubpassDescription(VkPipelineBindPoint pipelineBindPoint, 
 		uint32_t inputAttachmentCount, const VkAttachmentReference* pInputAttachments,
 		uint32_t colorAttachmentCount, const VkAttachmentReference* pColorAttachments, const VkAttachmentReference* pResolveAttachments,
 		const VkAttachmentReference& pDepthStencilAttachment,
-		uint32_t preserveAttachmentCount, const uint32_t* pPreserveAttachments) {
+		uint32_t preserveAttachmentCount, const uint32_t* pPreserveAttachments, VkSubpassDescriptionFlags flags = VKL_FLAG_NONE) {
 		return {
 			flags, pipelineBindPoint,
 			inputAttachmentCount, pInputAttachments,
@@ -41,7 +41,7 @@ namespace vkl {
 			dependencyFlags
 		};
 	}
-	inline VkRenderPassCreateInfo createRenderPassInfo(VkRenderPassCreateFlags flags, uint32_t attachmentCount, const VkAttachmentDescription* pAttachments, uint32_t subpassCount, const VkSubpassDescription* pSubpasses, uint32_t dependencyCount, const VkSubpassDependency* pDependencies, const void* pNext = nullptr) {
+	inline VkRenderPassCreateInfo createRenderPassInfo(uint32_t attachmentCount, const VkAttachmentDescription* pAttachments, uint32_t subpassCount, const VkSubpassDescription* pSubpasses, uint32_t dependencyCount, const VkSubpassDependency* pDependencies, VkRenderPassCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
 			pNext, flags, attachmentCount, pAttachments, subpassCount, pSubpasses, dependencyCount, pDependencies
@@ -51,22 +51,22 @@ namespace vkl {
 		VkRenderPass render_pass = VK_NULL_HANDLE;
 		VKL_RETURN(vkCreateRenderPass(device, &createInfo, VKL_Callbacks, &render_pass), render_pass);
 	}
-	inline VkRenderPass createRenderPass(VkDevice device, VkRenderPassCreateFlags flags, uint32_t attachmentCount, const VkAttachmentDescription* pAttachments, uint32_t subpassCount, const VkSubpassDescription* pSubpasses, uint32_t dependencyCount, const VkSubpassDependency* pDependencies, const void* pNext = nullptr) {
-		VkRenderPassCreateInfo info = createRenderPassInfo(flags, attachmentCount, pAttachments, subpassCount, pSubpasses, dependencyCount, pDependencies, pNext);
+	inline VkRenderPass createRenderPass(VkDevice device, uint32_t attachmentCount, const VkAttachmentDescription* pAttachments, uint32_t subpassCount, const VkSubpassDescription* pSubpasses, uint32_t dependencyCount, const VkSubpassDependency* pDependencies, VkRenderPassCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
+		VkRenderPassCreateInfo info = createRenderPassInfo(attachmentCount, pAttachments, subpassCount, pSubpasses, dependencyCount, pDependencies, flags, pNext);
 		VkRenderPass render_pass = VK_NULL_HANDLE;
 		VKL_RETURN(vkCreateRenderPass(device, &info, VKL_Callbacks, &render_pass), render_pass);
 	}
 	inline void destroyRenderPass(VkDevice device, VkRenderPass renderPass) {
 		vkDestroyRenderPass(device, renderPass, VKL_Callbacks);
 	}
-	inline VkFramebufferCreateInfo createFramebufferInfo(VkRenderPass renderPass, VkFramebufferCreateFlags flags, uint32_t attachmentCount, const VkImageView* pAttachments, uint32_t width, uint32_t height, uint32_t layers, const void* pNext = nullptr) {
+	inline VkFramebufferCreateInfo createFramebufferInfo(VkRenderPass renderPass, uint32_t attachmentCount, const VkImageView* pAttachments, uint32_t width, uint32_t height, uint32_t layers, VkFramebufferCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
 			pNext, flags, renderPass, attachmentCount, pAttachments, width, height, layers
 		};
 	}
-	inline VkFramebuffer createFramebuffer(VkDevice device, VkRenderPass renderPass, VkFramebufferCreateFlags flags, uint32_t attachmentCount, const VkImageView* pAttachments, uint32_t width, uint32_t height, uint32_t layers, const void* pNext = nullptr) {
-		VkFramebufferCreateInfo info = createFramebufferInfo(renderPass, flags, attachmentCount, pAttachments, width, height, layers, pNext);
+	inline VkFramebuffer createFramebuffer(VkDevice device, VkRenderPass renderPass, uint32_t attachmentCount, const VkImageView* pAttachments, uint32_t width, uint32_t height, uint32_t layers, VkFramebufferCreateFlags flags, const void* pNext = nullptr) {
+		VkFramebufferCreateInfo info = createFramebufferInfo(renderPass, attachmentCount, pAttachments, width, height, layers, flags, pNext);
 		VkFramebuffer framebuffer = VK_NULL_HANDLE;
 		VKL_RETURN(vkCreateFramebuffer(device, &info, VKL_Callbacks, &framebuffer), framebuffer);
 	}
