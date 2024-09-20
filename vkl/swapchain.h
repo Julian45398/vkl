@@ -3,13 +3,31 @@
 #include "vkl_core.h"
 
 namespace vkl {
-	inline VkSwapchainKHR createSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkExtent2D extent, uint32_t presentQueueFamilyIndex, uint32_t graphicsQueueFamilyIndex, uint32_t presentModeCount, const VkPresentModeKHR* presentModes, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE) {
+	inline VkSurfaceFormatKHR pickSurfaceFormat(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceFormatKHR surfaceFormat) {
+		uint32_t format_count;
+		vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &format_count, nullptr);
+		std::vector<VkSurfaceFormatKHR> surface_formats(format_count);
+		if (format_count != 0) {
+			vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &format_count, surface_formats.data());
+		}
+		else {
+			return { VK_FORMAT_MAX_ENUM, VK_COLOR_SPACE_MAX_ENUM_KHR };
+		}
+		for (const auto& available_format : surface_formats) {
+			if (available_format.format == surfaceFormat.format && available_format.colorSpace == surfaceFormat.colorSpace)
+			{
+				return available_format;
+			}
+		}
+		return surface_formats[0];
+	}
+	inline VkSwapchainKHR createSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkExtent2D extent, VkSurfaceFormatKHR targetFormat, 
+		uint32_t presentQueueFamilyIndex, uint32_t graphicsQueueFamilyIndex, uint32_t presentModeCount, const VkPresentModeKHR* presentModes, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE) {
 		VkSwapchainCreateInfoKHR create_info{};
 		create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 		create_info.oldSwapchain = oldSwapchain;
 		VkSurfaceCapabilitiesKHR capabilities;
 		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &capabilities);
-
 		VkPresentModeKHR present_mode = VK_PRESENT_MODE_MAX_ENUM_KHR;
 		{
 			uint32_t present_mode_count;
@@ -21,7 +39,6 @@ namespace vkl {
 			else {
 				return VK_NULL_HANDLE;
 			}
-
 			for (uint32_t i = 0; i < presentModeCount; ++i) {
 				bool present_mode_found = false;
 				for (const auto& available_present_mode : present_modes) {
@@ -43,27 +60,7 @@ namespace vkl {
 		if (capabilities.maxImageCount > 0 && image_count > capabilities.maxImageCount) {
 			image_count = capabilities.maxImageCount;
 		}
-
-		VkSurfaceFormatKHR surface_format;
-		{
-			uint32_t format_count;
-			vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &format_count, nullptr);
-			std::vector<VkSurfaceFormatKHR> surface_formats;
-			if (format_count != 0) {
-				surface_formats.resize(format_count);
-				vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &format_count, surface_formats.data());
-			}
-			else {
-				return VK_NULL_HANDLE;
-			}
-			surface_format = surface_formats[0];
-			for (const auto& available_format : surface_formats) {
-				if (available_format.format == VK_FORMAT_B8G8R8A8_SRGB && available_format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
-				{
-					surface_format = available_format;
-				}
-			}
-		}
+		VkSurfaceFormatKHR surface_format = pickSurfaceFormat(physicalDevice, surface, targetFormat);
 		VkSwapchainCreateInfoKHR createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 		createInfo.surface = surface;
@@ -73,7 +70,6 @@ namespace vkl {
 		createInfo.imageExtent = extent;
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-
 		if (presentQueueFamilyIndex != graphicsQueueFamilyIndex) {
 			uint32_t queueFamilyIndices[] = { graphicsQueueFamilyIndex, presentQueueFamilyIndex };
 			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
@@ -83,7 +79,6 @@ namespace vkl {
 		else {
 			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		}
-
 		createInfo.preTransform = capabilities.currentTransform;
 		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 		createInfo.presentMode = present_mode;
