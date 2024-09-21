@@ -45,7 +45,7 @@ namespace vkl {
 	}
 	inline VkPipelineRasterizationStateCreateInfo createPipelineRasterizationStateInfo(VkBool32 depthClampEnable, VkBool32 rasterizerDiscardEnable,
 		VkPolygonMode polygonMode, VkCullModeFlags cullMode, VkFrontFace frontFace, VkBool32 depthBiasEnable, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor, float lineWidth,
-		VkPipelineRasterizationStateCreateFlags flags = VKL_FLAG_NONE, const void* pNext) {
+		VkPipelineRasterizationStateCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO, pNext, flags, depthClampEnable, rasterizerDiscardEnable,
 			polygonMode, cullMode, frontFace, depthBiasEnable, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor, lineWidth
@@ -65,7 +65,7 @@ namespace vkl {
 	}
 
 	inline VkPipelineDynamicStateCreateInfo createPipelineDynamiceStateCreateInfo(uint32_t dynamicStateCount, const VkDynamicState* pDynamicStates, 
-		VkPipelineDynamicStateCreateFlags flags = VKL_FLAG_NONE, const void* pNext) {
+		VkPipelineDynamicStateCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO, pNext, flags, dynamicStateCount, pDynamicStates
 		};
