@@ -36,6 +36,13 @@ namespace vkl {
 		}
 		return candidates[0];
 	}
+	inline std::vector<VkImage> getSwapchainImages(VkDevice device, VkSwapchainKHR swapchain) {
+		uint32_t count;
+		vkGetSwapchainImagesKHR(device, swapchain, &count, nullptr);
+		std::vector<VkImage> images(count);
+		vkGetSwapchainImagesKHR(device, swapchain, &count, images.data());
+		return images;
+	}
 	inline VkSwapchainKHR createSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkExtent2D extent, VkSurfaceFormatKHR targetFormat, 
 		uint32_t presentQueueFamilyIndex, uint32_t graphicsQueueFamilyIndex, uint32_t presentModeCount, const VkPresentModeKHR* presentModes, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE) {
 		VkSwapchainCreateInfoKHR create_info{};
