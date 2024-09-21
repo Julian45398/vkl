@@ -21,6 +21,21 @@ namespace vkl {
 		}
 		return surface_formats[0];
 	}
+	VkFormat findSupportedFormat(VkPhysicalDevice physicalDevice, uint32_t candidate_count, const VkFormat* candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
+	{
+		for (uint32_t i = 0; i < candidate_count; i++) {
+			VkFormatProperties props;
+			vkGetPhysicalDeviceFormatProperties(physicalDevice, candidates[i], &props);
+
+			if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) {
+				return candidates[i];
+			}
+			else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features) {
+				return candidates[i];
+			}
+		}
+		return candidates[0];
+	}
 	inline VkSwapchainKHR createSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkExtent2D extent, VkSurfaceFormatKHR targetFormat, 
 		uint32_t presentQueueFamilyIndex, uint32_t graphicsQueueFamilyIndex, uint32_t presentModeCount, const VkPresentModeKHR* presentModes, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE) {
 		VkSwapchainCreateInfoKHR create_info{};
