@@ -21,7 +21,7 @@ namespace vkl {
 		}
 		return surface_formats[0];
 	}
-	VkFormat findSupportedFormat(VkPhysicalDevice physicalDevice, uint32_t candidate_count, const VkFormat* candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
+	inline VkFormat findSupportedFormat(VkPhysicalDevice physicalDevice, uint32_t candidate_count, const VkFormat* candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
 	{
 		for (uint32_t i = 0; i < candidate_count; i++) {
 			VkFormatProperties props;
