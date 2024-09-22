@@ -35,4 +35,7 @@ namespace vkl {
 	inline void destroyImage(VkDevice device, VkImage image) {
 		vkDestroyImage(device, image, VKL_Callbacks);
 	}
+	inline void destroyImageView(VkDevice device, VkImageView imageView) {
+		vkDestroyImageView(device, imageView, VKL_Callbacks);
+	}
 }
