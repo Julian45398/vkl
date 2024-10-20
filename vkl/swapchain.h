@@ -21,6 +21,26 @@ namespace vkl {
 		}
 		return surface_formats[0];
 	}
+	inline VkPresentModeKHR pickPresentMode(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t presentModeCount, const VkPresentModeKHR* presentModes) {
+		uint32_t available_mode_count;
+		vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &available_mode_count, nullptr);
+		std::vector<VkPresentModeKHR> available_modes(available_mode_count);
+		if (available_mode_count != 0) {
+			vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &available_mode_count, available_modes.data());
+		}
+		else {
+			return VK_PRESENT_MODE_MAX_ENUM_KHR;
+		}
+		for (uint32_t i = 0; i < presentModeCount; ++i) {
+			bool present_mode_found = false;
+			for (const auto& available_present_mode : available_modes) {
+				if (available_present_mode == presentModes[i]) {
+					return available_present_mode;
+				}
+			}
+		}
+		return VK_PRESENT_MODE_MAX_ENUM_KHR;
+	}
 	inline VkFormat findSupportedFormat(VkPhysicalDevice physicalDevice, uint32_t candidate_count, const VkFormat* candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
 	{
 		for (uint32_t i = 0; i < candidate_count; i++) {
@@ -43,41 +63,13 @@ namespace vkl {
 		vkGetSwapchainImagesKHR(device, swapchain, &count, images.data());
 		return images;
 	}
-	inline VkSwapchainKHR createSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkExtent2D extent, VkSurfaceFormatKHR targetFormat, 
-		uint32_t presentQueueFamilyIndex, uint32_t graphicsQueueFamilyIndex, uint32_t presentModeCount, const VkPresentModeKHR* presentModes, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE) {
+	inline VkSwapchainKHR createSwapchain(VkDevice device, VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t presentQueueFamilyIndex, uint32_t graphicsQueueFamilyIndex,
+		VkExtent2D extent, VkSurfaceFormatKHR targetFormat, VkPresentModeKHR presentMode, VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE) {
 		VkSwapchainCreateInfoKHR create_info{};
 		create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 		create_info.oldSwapchain = oldSwapchain;
 		VkSurfaceCapabilitiesKHR capabilities;
 		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &capabilities);
-		VkPresentModeKHR present_mode = VK_PRESENT_MODE_MAX_ENUM_KHR;
-		{
-			uint32_t present_mode_count;
-			vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &present_mode_count, nullptr);
-			std::vector<VkPresentModeKHR> present_modes(present_mode_count);
-			if (present_mode_count != 0) {
-				vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &present_mode_count, present_modes.data());
-			}
-			else {
-				return VK_NULL_HANDLE;
-			}
-			for (uint32_t i = 0; i < presentModeCount; ++i) {
-				bool present_mode_found = false;
-				for (const auto& available_present_mode : present_modes) {
-					if (available_present_mode == presentModes[i]) {
-						present_mode = available_present_mode;
-						present_mode_found = true;
-						break;
-					}
-				}
-				if (present_mode_found) {
-					break;
-				}
-			}
-			if (present_mode == VK_PRESENT_MODE_MAX_ENUM_KHR) {
-				return VK_NULL_HANDLE;
-			}
-		}
 		uint32_t image_count = capabilities.minImageCount + 1;
 		if (capabilities.maxImageCount > 0 && image_count > capabilities.maxImageCount) {
 			image_count = capabilities.maxImageCount;
@@ -103,7 +95,7 @@ namespace vkl {
 		}
 		createInfo.preTransform = capabilities.currentTransform;
 		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-		createInfo.presentMode = present_mode;
+		createInfo.presentMode = presentMode;
 		createInfo.clipped = VK_TRUE;
 
 		VkSwapchainKHR swapchain = VK_NULL_HANDLE;
