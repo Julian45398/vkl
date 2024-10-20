@@ -44,4 +44,9 @@ namespace vkl {
 		VkCommandBufferBeginInfo info = createCommandBufferBeginInfo(flags, pInheritanceInfo, pNext);
 		return vkBeginCommandBuffer(commandBuffer, &info);
 	}
+	inline VkCommandBufferInheritanceInfo createCommandBufferInheritanceInfo(VkRenderPass renderPass, uint32_t subpass, VkFramebuffer framebuffer = VK_NULL_HANDLE, VkBool32 occlusionQueryEnable = VK_FALSE, VkQueryControlFlags queryFlags = VKL_FLAG_NONE, VkQueryPipelineStatisticFlags pipelineStatistics = VKL_FLAG_NONE, const void* pNext = nullptr) {
+		return {
+			VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO, pNext, renderPass, subpass, framebuffer, occlusionQueryEnable, queryFlags, pipelineStatistics
+		};
+	}
 }
