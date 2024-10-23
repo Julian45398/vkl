@@ -10,3 +10,5 @@
 #include "vkl/memory.h"
 #include "vkl/pipeline.h"
 #include "vkl/commands.h"
+#include "vkl/synchronization.h"
+
