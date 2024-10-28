@@ -7,16 +7,17 @@ namespace vkl {
 		assert(device != VK_NULL_HANDLE);
 		assert(buffer != VK_NULL_HANDLE);
 		VkMemoryRequirements req;
-		VKL_RETURN(vkGetBufferMemoryRequirements(device, buffer, &req), req);
+		VKL_CHECK(vkGetBufferMemoryRequirements(device, buffer, &req), "failed to acquire buffer memory requirements");
+		return req;
 	}
 	inline VkMemoryRequirements getImageMemoryRequirements(VkDevice device, VkImage image) {
 		assert(device != VK_NULL_HANDLE);
 		assert(image != VK_NULL_HANDLE);
 		VkMemoryRequirements req;
-		VKL_RETURN(vkGetImageMemoryRequirements(device, image, &req), req);
+		VKL_CHECK(vkGetImageMemoryRequirements(device, image, &req), "failed to acquire image memory requirements");
+		return req;
 	}
-	inline uint32_t findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties)
-	{
+	inline uint32_t findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
 		assert(physicalDevice != VK_NULL_HANDLE);
 		VkPhysicalDeviceMemoryProperties mem_properties;
 		vkGetPhysicalDeviceMemoryProperties(physicalDevice, &mem_properties);
@@ -34,13 +35,15 @@ namespace vkl {
 		};
 	}
 	inline VkDeviceMemory allocateMemory(VkDevice device, const VkMemoryAllocateInfo& info) {
-		VkDeviceMemory memory = VK_NULL_HANDLE;
-		VKL_RETURN(vkAllocateMemory(device, &info, VKL_Callbacks, &memory), memory);
+		VkDeviceMemory memory;
+		VKL_CHECK(vkAllocateMemory(device, &info, VKL_Callbacks, &memory), VKL_ERROR_MEMORY_ALLOCATION_FAILED);
+		return memory;
 	}
 	inline VkDeviceMemory allocateMemory(VkDevice device, VkDeviceSize allocationSize, uint32_t memoryTypeIndex, const void* pNext = nullptr) {
 		VkMemoryAllocateInfo info = createMemoryAllocateInfo(allocationSize, memoryTypeIndex, pNext);
-		VkDeviceMemory memory = VK_NULL_HANDLE;
-		VKL_RETURN(vkAllocateMemory(device, &info, VKL_Callbacks, &memory), memory);
+		VkDeviceMemory memory;
+		VKL_CHECK(vkAllocateMemory(device, &info, VKL_Callbacks, &memory), VKL_ERROR_MEMORY_ALLOCATION_FAILED);
+		return memory;
 	}
 	inline VkDeviceMemory allocateMemory(VkDevice device, VkPhysicalDevice physicalDevice, const VkMemoryRequirements& memoryRequirements, VkMemoryPropertyFlags properties) {
 		return allocateMemory(device, memoryRequirements.size, findMemoryType(physicalDevice, memoryRequirements.memoryTypeBits, properties));
@@ -87,9 +90,6 @@ namespace vkl {
 			mem_req.size += mem_req.alignment - t;
 		}
 		VkDeviceMemory memory = allocateMemory(device, physicalDevice, mem_req, properties);
-		if (!memory) {
-			return VK_NULL_HANDLE;
-		}
 		for (uint32_t i = 0; i < imageCount; ++i) {
 			vkBindImageMemory(device, images[i], memory, offsets[i]);
 		}

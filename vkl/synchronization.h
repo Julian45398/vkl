@@ -4,19 +4,21 @@
 
 namespace vkl {
 	inline VkFence createFence(VkDevice device, VkFenceCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
-		VkFence fence = VK_NULL_HANDLE;
+		VkFence fence;
 		VkFenceCreateInfo info {
 			VK_STRUCTURE_TYPE_FENCE_CREATE_INFO, 
 			pNext, flags
 		};
-		VKL_RETURN(vkCreateFence(device, &info, VKL_Callbacks, &fence), fence);
+		VKL_CHECK(vkCreateFence(device, &info, VKL_Callbacks, &fence), VKL_ERROR_FENCE_CREATION_FAILED);
+		return fence;
 	}
 	inline VkSemaphore createSemaphore(VkDevice device, VkSemaphoreCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
-		VkSemaphore semaphore = VK_NULL_HANDLE;
+		VkSemaphore semaphore;
 		VkSemaphoreCreateInfo info {
 			VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO, 
 			pNext, flags
 		};
-		VKL_RETURN(vkCreateSemaphore(device, &info, VKL_Callbacks, &semaphore), semaphore);
+		VKL_CHECK(vkCreateSemaphore(device, &info, VKL_Callbacks, &semaphore), VKL_ERROR_SEMAPHORE_CREATION_FAILED);
+		return semaphore;
 	}
 }
