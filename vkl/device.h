@@ -153,7 +153,8 @@ namespace vkl {
 		create_info.enabledLayerCount = 0;
 #endif
 		VkDevice device = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateDevice(physical_device, &create_info, VKL_Callbacks, &device), device);
+		VKL_CHECK(vkCreateDevice(physical_device, &create_info, VKL_Callbacks, &device), VKL_ERROR_DEVICE_CREATION_FAILED);
+		return device;
 	}
 	inline void destroyDevice(VkDevice device) {
 		vkDestroyDevice(device, VKL_Callbacks);

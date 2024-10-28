@@ -63,9 +63,9 @@ namespace vkl {
 		create_info.enabledLayerCount = 0;
 		create_info.ppEnabledLayerNames = nullptr;
 #endif
-
-		VkInstance instance = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateInstance(&create_info, VKL_Callbacks, &instance), instance);
+		VkInstance instance;
+		VKL_CHECK(vkCreateInstance(&create_info, VKL_Callbacks, &instance), VKL_ERROR_INSTANCE_CREATION_FAILED);
+		return instance;
 	}
 	inline void destroyInstance(VkInstance instance) {
 		vkDestroyInstance(instance, VKL_Callbacks);

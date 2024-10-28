@@ -99,9 +99,23 @@ namespace vkl {
 		createInfo.clipped = VK_TRUE;
 
 		VkSwapchainKHR swapchain = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateSwapchainKHR(device, &createInfo, VKL_Callbacks, &swapchain), swapchain);
+		VKL_CHECK(vkCreateSwapchainKHR(device, &createInfo, VKL_Callbacks, &swapchain), VKL_ERROR_SWAPCHAIN_CREATION_FAILED);
+		return swapchain;
 	}
 	inline void destroySwapchain(VkDevice device, VkSwapchainKHR swapchain) {
 		vkDestroySwapchainKHR(device, swapchain, VKL_Callbacks);
+	}
+	inline uint32_t acquireNextImage(VkDevice device, VkSwapchainKHR swapchain, VkSemaphore imageAvailable, VkFence fence = VK_NULL_HANDLE) {
+		uint32_t image_index;
+		VKL_CHECK(vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, imageAvailable, fence, &image_index), VKL_ERROR_IMAGE_ACQUIRING_FAILED);
+		return image_index;
+	}
+	inline VkResult presentSwapchain(VkQueue queue, VkSwapchainKHR swapchain, uint32_t imageIndex, uint32_t waitSemaphoreCount, const VkSemaphore* pWaitSemaphores, const void* pNext = nullptr) {
+		VkResult result;
+		VkPresentInfoKHR info{
+			VK_STRUCTURE_TYPE_PRESENT_INFO_KHR, pNext, waitSemaphoreCount, pWaitSemaphores, 1, &swapchain, &imageIndex, &result
+		};
+		vkQueuePresentKHR(queue, &info);
+		return result;
 	}
 }

@@ -12,12 +12,17 @@ namespace vkl {
 	}
 	inline VkCommandPool createCommandPool(VkDevice device, const VkCommandPoolCreateInfo& info) {
 		VkCommandPool pool = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateCommandPool(device, &info, VKL_Callbacks, &pool), pool);
+		VKL_CHECK(vkCreateCommandPool(device, &info, VKL_Callbacks, &pool), VKL_ERROR_COMMANDPOOL_CREATION_FAILED);
+		return pool;
 	}
 	inline VkCommandPool createCommandPool(VkDevice device, uint32_t queueFamilyIndex, VkCommandPoolCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		VkCommandPoolCreateInfo info = createCommandPoolInfo(queueFamilyIndex, flags, pNext);
 		VkCommandPool pool = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateCommandPool(device, &info, VKL_Callbacks, &pool), pool);
+		VKL_CHECK(vkCreateCommandPool(device, &info, VKL_Callbacks, &pool), VKL_ERROR_COMMANDPOOL_CREATION_FAILED);
+		return pool;
+	}
+	inline void destroyCommandPool(VkDevice device, VkCommandPool commandPool) {
+		vkDestroyCommandPool(device, commandPool, VKL_Callbacks);
 	}
 	inline VkCommandBufferAllocateInfo createCommandBufferAllocateInfo(VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY, const void* pNext = nullptr) {
 		return {
@@ -30,7 +35,8 @@ namespace vkl {
 	inline VkCommandBuffer createCommandBuffer(VkDevice device, VkCommandPool commandPool, VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY, const void* pNext = nullptr) {
 		VkCommandBufferAllocateInfo info = createCommandBufferAllocateInfo(commandPool, 1, level, pNext);
 		VkCommandBuffer command_buffer = VK_NULL_HANDLE;
-		VKL_RETURN(vkAllocateCommandBuffers(device, &info, &command_buffer), command_buffer);
+		VKL_CHECK(vkAllocateCommandBuffers(device, &info, &command_buffer), VKL_ERROR_COMMANDBUFFER_CREATION_FAILED);
+		return command_buffer;
 	}
 	inline VkCommandBufferBeginInfo createCommandBufferBeginInfo(VkCommandBufferUsageFlags flags, const VkCommandBufferInheritanceInfo* pInheritanceInfo = nullptr, const void* pNext = nullptr) {
 		return {

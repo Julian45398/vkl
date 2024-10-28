@@ -12,7 +12,8 @@ namespace vkl {
 	}
 	inline VkPipelineLayout createPipelineLayout(VkDevice device, const VkPipelineLayoutCreateInfo& createInfo) {
 		VkPipelineLayout layout = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreatePipelineLayout(device, &createInfo, VKL_Callbacks, &layout), layout);
+		VKL_CHECK(vkCreatePipelineLayout(device, &createInfo, VKL_Callbacks, &layout), VKL_ERROR_PIPELINE_LAYOUT_CREATION_FAILED);
+		return layout;
 	}
 	inline VkShaderModuleCreateInfo createShaderModuleInfo(size_t codeSize, const uint32_t* pCode, VkShaderModuleCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
@@ -22,11 +23,12 @@ namespace vkl {
 	inline VkShaderModule createShaderModule(VkDevice device, size_t codeSize, const uint32_t* pCode, VkShaderModuleCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		VkShaderModuleCreateInfo info = createShaderModuleInfo(codeSize, pCode, flags, pNext);
 		VkShaderModule module = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateShaderModule(device, &info, VKL_Callbacks, &module), module);
+		VKL_CHECK(vkCreateShaderModule(device, &info, VKL_Callbacks, &module), module);
 	}
 	inline VkShaderModule createShaderModule(VkDevice device, const VkShaderModuleCreateInfo& info) {
 		VkShaderModule module = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateShaderModule(device, &info, VKL_Callbacks, &module), module);
+		VKL_CHECK(vkCreateShaderModule(device, &info, VKL_Callbacks, &module), VKL_ERROR_SHADER_MODULE_CREATION_FAILED);
+		return module;
 	}
 	inline VkPipelineShaderStageCreateInfo createPipelineShaderStageInfo(VkShaderStageFlagBits stage, VkShaderModule module, const VkSpecializationInfo* pSpecializationInfo = nullptr, VkPipelineShaderStageCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
@@ -102,7 +104,8 @@ namespace vkl {
 	}
 	inline VkPipeline createGraphicsPipeline(VkDevice device, const VkGraphicsPipelineCreateInfo& info, VkPipelineCache pipelineCache = VK_NULL_HANDLE) {
 		VkPipeline pipeline = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateGraphicsPipelines(device, pipelineCache, 1, &info, VKL_Callbacks, &pipeline), pipeline);
+		VKL_CHECK(vkCreateGraphicsPipelines(device, pipelineCache, 1, &info, VKL_Callbacks, &pipeline), VKL_ERROR_PIPELINE_CREATION_FAILED);
+		return pipeline;
 	}
 	inline VkComputePipelineCreateInfo createComputePipelineInfo(VkShaderModule module, VkPipelineLayout layout, VkPipeline basePipelineHandle = VK_NULL_HANDLE, int32_t basePipelineIndex = 0, VkPipelineCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
@@ -118,16 +121,19 @@ namespace vkl {
 	}
 	inline VkPipeline createComputePipeline(VkDevice device, const VkComputePipelineCreateInfo& info, VkPipelineCache pipelineCache = VK_NULL_HANDLE) {
 		VkPipeline pipeline = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateComputePipelines(device, pipelineCache, 1, &info, VKL_Callbacks, &pipeline), pipeline);
+		VKL_CHECK(vkCreateComputePipelines(device, pipelineCache, 1, &info, VKL_Callbacks, &pipeline), VKL_ERROR_PIPELINE_CREATION_FAILED);
+		return pipeline;
 	}
 	inline VkPipeline createComputePipeline(VkDevice device, const VkPipelineShaderStageCreateInfo& stage, VkPipelineLayout layout, VkPipeline basePipelineHandle = VK_NULL_HANDLE, int32_t basePipelineIndex = 0, VkPipelineCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr, VkPipelineCache pipelineCache = VK_NULL_HANDLE) {
 		VkComputePipelineCreateInfo info = createComputePipelineInfo(stage, layout, basePipelineHandle, basePipelineIndex, flags, pNext);
 		VkPipeline pipeline = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateComputePipelines(device, pipelineCache, 1, &info, VKL_Callbacks, &pipeline), pipeline);
+		VKL_CHECK(vkCreateComputePipelines(device, pipelineCache, 1, &info, VKL_Callbacks, &pipeline), VKL_ERROR_PIPELINE_CREATION_FAILED);
+		return pipeline;
 	}
 	inline VkPipeline createComputePipeline(VkDevice device, VkShaderModule module, VkPipelineLayout layout, VkPipeline basePipelineHandle = VK_NULL_HANDLE, int32_t basePipelineIndex = 0, VkPipelineCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr, VkPipelineCache pipelineCache = VK_NULL_HANDLE) {
 		VkComputePipelineCreateInfo info = createComputePipelineInfo(module, layout, basePipelineHandle, basePipelineIndex, flags, pNext);
 		VkPipeline pipeline = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateComputePipelines(device, pipelineCache, 1, &info, VKL_Callbacks, &pipeline), pipeline);
+		VKL_CHECK(vkCreateComputePipelines(device, pipelineCache, 1, &info, VKL_Callbacks, &pipeline), VKL_ERROR_PIPELINE_CREATION_FAILED);
+		return pipeline;
 	}
 }

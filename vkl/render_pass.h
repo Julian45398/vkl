@@ -50,13 +50,15 @@ namespace vkl {
 	}
 	inline VkRenderPass createRenderPass(VkDevice device, const VkRenderPassCreateInfo& createInfo) {
 		VkRenderPass render_pass = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateRenderPass(device, &createInfo, VKL_Callbacks, &render_pass), render_pass);
+		VKL_CHECK(vkCreateRenderPass(device, &createInfo, VKL_Callbacks, &render_pass), VKL_ERROR_RENDER_PASS_CREATION_FAILED);
+		return render_pass;
 	}
 	inline VkRenderPass createRenderPass(VkDevice device, uint32_t attachmentCount, const VkAttachmentDescription* pAttachments, uint32_t subpassCount, const VkSubpassDescription* pSubpasses, uint32_t dependencyCount, const VkSubpassDependency* pDependencies,
 		VkRenderPassCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		VkRenderPassCreateInfo info = createRenderPassInfo(attachmentCount, pAttachments, subpassCount, pSubpasses, dependencyCount, pDependencies, flags, pNext);
 		VkRenderPass render_pass = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateRenderPass(device, &info, VKL_Callbacks, &render_pass), render_pass);
+		VKL_CHECK(vkCreateRenderPass(device, &info, VKL_Callbacks, &render_pass), VKL_ERROR_RENDER_PASS_CREATION_FAILED);
+		return render_pass;
 	}
 	inline void destroyRenderPass(VkDevice device, VkRenderPass renderPass) {
 		vkDestroyRenderPass(device, renderPass, VKL_Callbacks);
@@ -72,11 +74,13 @@ namespace vkl {
 		VkFramebufferCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		VkFramebufferCreateInfo info = createFramebufferInfo(renderPass, attachmentCount, pAttachments, width, height, layers, flags, pNext);
 		VkFramebuffer framebuffer = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateFramebuffer(device, &info, VKL_Callbacks, &framebuffer), framebuffer);
+		VKL_CHECK(vkCreateFramebuffer(device, &info, VKL_Callbacks, &framebuffer), VKL_ERROR_FRAMEBUFFER_CREATION_FAILED);
+		return framebuffer;
 	}
 	inline VkFramebuffer createFramebuffer(VkDevice device, const VkFramebufferCreateInfo& info) {
 		VkFramebuffer framebuffer = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateFramebuffer(device, &info, VKL_Callbacks, &framebuffer), framebuffer);
+		VKL_CHECK(vkCreateFramebuffer(device, &info, VKL_Callbacks, &framebuffer), VKL_ERROR_FRAMEBUFFER_CREATION_FAILED);
+		return framebuffer;
 	}
 	inline void destroyFramebuffer(VkDevice device, VkFramebuffer framebuffer) {
 		vkDestroyFramebuffer(device, framebuffer, VKL_Callbacks);

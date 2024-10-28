@@ -10,13 +10,14 @@ namespace vkl {
 	}
 	inline VkBuffer createBuffer(VkDevice device, const VkBufferCreateInfo& createInfo) {
 		VkBuffer buffer = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateBuffer(device, &createInfo, VKL_Callbacks, &buffer), buffer);
+		VKL_CHECK(vkCreateBuffer(device, &createInfo, VKL_Callbacks, &buffer), VKL_ERROR_BUFFER_CREATION_FAILED);
 		return buffer;
 	}
-	inline VkBuffer createBufferInfo(VkDevice device, VkBufferCreateFlags flags, VkDeviceSize size, VkBufferUsageFlags usage, VkSharingMode sharingMode, uint32_t queueFamilyIndexCount, const uint32_t* pQueueFamilyIndices, const void* pNext = nullptr) {
+	inline VkBuffer createBuffer(VkDevice device, VkBufferCreateFlags flags, VkDeviceSize size, VkBufferUsageFlags usage, VkSharingMode sharingMode, uint32_t queueFamilyIndexCount, const uint32_t* pQueueFamilyIndices, const void* pNext = nullptr) {
 		VkBufferCreateInfo info = createBufferInfo(size, usage, sharingMode, queueFamilyIndexCount, pQueueFamilyIndices, flags, pNext);
 		VkBuffer buffer = VK_NULL_HANDLE;
-		VKL_RETURN(vkCreateBuffer(device, &info, VKL_Callbacks, &buffer), buffer);
+		VKL_CHECK(vkCreateBuffer(device, &info, VKL_Callbacks, &buffer), VKL_ERROR_BUFFER_CREATION_FAILED);
+		return buffer;
 	}
 	inline void destroyBuffer(VkDevice device, VkBuffer buffer) {
 		vkDestroyBuffer(device, buffer, VKL_Callbacks);
