@@ -40,6 +40,11 @@ namespace vkl {
 			VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO, pNext, flags, topology, primitiveRestartEnable
 		};
 	}
+	inline VkPipelineTessellationStateCreateInfo createPipelineTessellationStateInfo(uint32_t patchControlPoints, VkPipelineTessellationStateCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
+		return {
+			VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO, pNext, flags, patchControlPoints
+		};
+	}
 	inline VkPipelineViewportStateCreateInfo createPipelineViewportStateInfo(uint32_t viewportCount, const VkViewport* pViewports, uint32_t scissorCount, const VkRect2D* pScissors, VkPipelineViewportStateCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO, pNext, flags, viewportCount, pViewports, scissorCount, pScissors
