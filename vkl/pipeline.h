@@ -35,7 +35,7 @@ namespace vkl {
 			VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, pNext, flags, stage, module, "main", pSpecializationInfo
 		};
 	}
-	inline VkPipelineInputAssemblyStateCreateInfo createInputAssemblyInfo(VkPrimitiveTopology topology, VkBool32 primitiveRestartEnable, VkPipelineInputAssemblyStateCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
+	inline VkPipelineInputAssemblyStateCreateInfo createPipelineInputAssemblyInfo(VkPrimitiveTopology topology, VkBool32 primitiveRestartEnable, VkPipelineInputAssemblyStateCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO, pNext, flags, topology, primitiveRestartEnable
 		};
