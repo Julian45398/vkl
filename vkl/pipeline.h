@@ -77,8 +77,8 @@ namespace vkl {
 			VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO, pNext, flags, dynamicStateCount, pDynamicStates
 		};
 	}
-	inline VkPipelineDepthStencilStateCreateInfo createPipelineDepthStencilStateInfo(VkBool32 depthTestEnable, VkBool32 depthWriteEnable, VkCompareOp depthCompareOp, VkBool32 depthBoundsTestEnable,
-		VkBool32 stencilTestEnable, VkStencilOpState front, VkStencilOpState back, float minDepthBounds, float maxDepthBounds,
+	inline VkPipelineDepthStencilStateCreateInfo createPipelineDepthStencilStateInfo(VkBool32 depthTestEnable, VkBool32 depthWriteEnable, VkCompareOp depthCompareOp, VkBool32 depthBoundsTestEnable = VK_FALSE,
+		VkBool32 stencilTestEnable = VK_FALSE, const VkStencilOpState& front = {}, const VkStencilOpState& back = {}, float minDepthBounds = 0.0f, float maxDepthBounds = 0.0f,
 		VkPipelineDepthStencilStateCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO, pNext, flags, depthTestEnable, depthWriteEnable,
