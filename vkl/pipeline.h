@@ -24,6 +24,7 @@ namespace vkl {
 		VkShaderModuleCreateInfo info = createShaderModuleInfo(codeSize, pCode, flags, pNext);
 		VkShaderModule module;
 		VKL_CHECK(vkCreateShaderModule(device, &info, VKL_Callbacks, &module), VKL_ERROR_SHADER_MODULE_CREATION_FAILED);
+		return module;
 	}
 	inline VkShaderModule createShaderModule(VkDevice device, const VkShaderModuleCreateInfo& info) {
 		VkShaderModule module;
