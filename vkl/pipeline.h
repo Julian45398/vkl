@@ -59,10 +59,10 @@ namespace vkl {
 			polygonMode, cullMode, frontFace, depthBiasEnable, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor, lineWidth
 		};
 	}
-	inline VkPipelineMultisampleStateCreateInfo createPipelineMultisampleStateInfo(VkSampleCountFlagBits rasterizationSamples, VkBool32 sampleShadingEnable, float minSampleShading, const VkSampleMask& sampleMask, VkBool32 alphaToCoverageEnable, VkBool32 alphaToOneEnable, 
+	inline VkPipelineMultisampleStateCreateInfo createPipelineMultisampleStateInfo(VkSampleCountFlagBits rasterizationSamples, VkBool32 sampleShadingEnable, float minSampleShading, const VkSampleMask* sampleMask, VkBool32 alphaToCoverageEnable, VkBool32 alphaToOneEnable, 
 		VkPipelineMultisampleStateCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
-			VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO, pNext, flags, rasterizationSamples, sampleShadingEnable, minSampleShading, &sampleMask, alphaToCoverageEnable, alphaToOneEnable
+			VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO, pNext, flags, rasterizationSamples, sampleShadingEnable, minSampleShading, sampleMask, alphaToCoverageEnable, alphaToOneEnable
 		};
 	}
 	inline VkPipelineColorBlendStateCreateInfo createPipelineColorBlendStateInfo(VkBool32 logicOpEnable, VkLogicOp logicOp, uint32_t attachmentCount, 
