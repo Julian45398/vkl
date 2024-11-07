@@ -70,6 +70,7 @@ namespace vkl {
 				offsets[i] = mem_req.size;
 			}
 			mem_req.size = offsets[i] + req.size;
+			mem_req.memoryTypeBits |= req.memoryTypeBits;
 		}
 		for (uint32_t i = 0; i < bufferCount; ++i) {
 			VkMemoryRequirements req = getBufferMemoryRequirements(device, buffers[i]);
@@ -84,6 +85,7 @@ namespace vkl {
 				offsets[imageCount + i] = mem_req.size;
 			}
 			mem_req.size = offsets[imageCount + i] + req.size;
+			mem_req.memoryTypeBits |= req.memoryTypeBits;
 		}
 		VkDeviceSize t = mem_req.size % mem_req.alignment;
 		if (t != 0) {
