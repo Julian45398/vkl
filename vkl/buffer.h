@@ -13,7 +13,7 @@ namespace vkl {
 		VKL_CHECK(vkCreateBuffer(device, &createInfo, VKL_Callbacks, &buffer), VKL_ERROR_BUFFER_CREATION_FAILED);
 		return buffer;
 	}
-	inline VkBuffer createBuffer(VkDevice device, VkBufferCreateFlags flags, VkDeviceSize size, VkBufferUsageFlags usage, VkSharingMode sharingMode, uint32_t queueFamilyIndexCount, const uint32_t* pQueueFamilyIndices, const void* pNext = nullptr) {
+	inline VkBuffer createBuffer(VkDevice device, VkDeviceSize size, VkBufferUsageFlags usage, VkSharingMode sharingMode, uint32_t queueFamilyIndexCount, const uint32_t* pQueueFamilyIndices, VkBufferCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		VkBufferCreateInfo info = createBufferInfo(size, usage, sharingMode, queueFamilyIndexCount, pQueueFamilyIndices, flags, pNext);
 		VkBuffer buffer = VK_NULL_HANDLE;
 		VKL_CHECK(vkCreateBuffer(device, &info, VKL_Callbacks, &buffer), VKL_ERROR_BUFFER_CREATION_FAILED);
