@@ -22,4 +22,9 @@ namespace vkl {
 	inline void destroyBuffer(VkDevice device, VkBuffer buffer) {
 		vkDestroyBuffer(device, buffer, VKL_Callbacks);
 	}
+	inline VkBufferMemoryBarrier createBufferMemoryBarrier(VkBuffer buffer, VkDeviceSize size, VkDeviceSize offset, uint32_t srcQueueFamilyIndex, uint32_t dstQueueFamilyIndex, VkAccessFlags srcAccessMask, VkAccessFlags dstAccessMask, const void* pNext = nullptr) {
+		return {
+			VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER, pNext, srcAccessMask, dstAccessMask, srcQueueFamilyIndex, dstQueueFamilyIndex, buffer, offset, size
+		};
+	}
 }

@@ -24,6 +24,9 @@ namespace vkl {
 	inline void destroyCommandPool(VkDevice device, VkCommandPool commandPool) {
 		vkDestroyCommandPool(device, commandPool, VKL_Callbacks);
 	}
+	inline void resetCommandPool(VkDevice device, VkCommandPool commandPool, VkCommandPoolResetFlags flags = VKL_FLAG_NONE) {
+		VKL_CHECK(vkResetCommandPool(device, commandPool, flags), VKL_ERROR_COMMANDPOOL_RESET_FAILED);
+	}
 	inline VkCommandBufferAllocateInfo createCommandBufferAllocateInfo(VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO, pNext, commandPool, level, commandBufferCount

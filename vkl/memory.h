@@ -7,15 +7,21 @@ namespace vkl {
 		assert(device != VK_NULL_HANDLE);
 		assert(buffer != VK_NULL_HANDLE);
 		VkMemoryRequirements req;
-		VKL_CHECK(vkGetBufferMemoryRequirements(device, buffer, &req), "failed to acquire buffer memory requirements");
+		VKL_CHECK(vkGetBufferMemoryRequirements(device, buffer, &req), VKL_ERROR_BUFFER_MEMORY_REQ_ACQUIRED_FAILED);
 		return req;
 	}
 	inline VkMemoryRequirements getImageMemoryRequirements(VkDevice device, VkImage image) {
 		assert(device != VK_NULL_HANDLE);
 		assert(image != VK_NULL_HANDLE);
 		VkMemoryRequirements req;
-		VKL_CHECK(vkGetImageMemoryRequirements(device, image, &req), "failed to acquire image memory requirements");
+		VKL_CHECK(vkGetImageMemoryRequirements(device, image, &req), VKL_ERROR_IMAGE_MEMORY_REQ_ACQUIRED_FAILED);
 		return req;
+	}
+	inline VkPhysicalDeviceMemoryProperties getPhysicalDeviceMemoryProperties(VkPhysicalDevice physicalDevice) {
+		assert(physicalDevice != VK_NULL_HANDLE);
+		VkPhysicalDeviceMemoryProperties mem_properties;
+		vkGetPhysicalDeviceMemoryProperties(physicalDevice, &mem_properties);
+		return mem_properties;
 	}
 	inline uint32_t findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
 		assert(physicalDevice != VK_NULL_HANDLE);
@@ -53,6 +59,62 @@ namespace vkl {
 	}
 	inline VkDeviceMemory allocateForImage(VkDevice device, VkPhysicalDevice physicalDevice, VkImage image, VkMemoryPropertyFlags properties) {
 		return allocateMemory(device, physicalDevice, getImageMemoryRequirements(device, image), properties);
+	}
+	inline VkDeviceMemory allocateAndBind(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t imageCount, const VkImage* images, VkMemoryPropertyFlags properties) {
+		VkMemoryRequirements mem_req{};
+		std::vector<VkDeviceSize> offsets(imageCount);
+		for (uint32_t i = 0; i < imageCount; ++i) {
+			VkMemoryRequirements req = getImageMemoryRequirements(device, images[i]);
+			if (mem_req.alignment < req.alignment) {
+				mem_req.alignment = req.alignment;
+			} 
+			VkDeviceSize t = mem_req.size % req.alignment;
+			if (t != 0) {
+				offsets[i] = mem_req.size + req.alignment - t;
+			}
+			else {
+				offsets[i] = mem_req.size;
+			}
+			mem_req.size = offsets[i] + req.size;
+			mem_req.memoryTypeBits |= req.memoryTypeBits;
+		}
+		VkDeviceSize t = mem_req.size % mem_req.alignment;
+		if (t != 0) {
+			mem_req.size += mem_req.alignment - t;
+		}
+		VkDeviceMemory memory = allocateMemory(device, physicalDevice, mem_req, properties);
+		for (uint32_t i = 0; i < imageCount; ++i) {
+			vkBindImageMemory(device, images[i], memory, offsets[i]);
+		}
+		return memory;
+	}
+	inline VkDeviceMemory allocateAndBind(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t bufferCount, const VkBuffer* buffers, VkMemoryPropertyFlags properties) {
+		VkMemoryRequirements mem_req{};
+		std::vector<VkDeviceSize> offsets(bufferCount);
+		for (uint32_t i = 0; i < bufferCount; ++i) {
+			VkMemoryRequirements req = getBufferMemoryRequirements(device, buffers[i]);
+			if (mem_req.alignment < req.alignment) {
+				mem_req.alignment = req.alignment;
+			} 
+			VkDeviceSize t = mem_req.size % req.alignment;
+			if (t != 0) {
+				offsets[i] = mem_req.size + req.alignment - t;
+			}
+			else {
+				offsets[i] = mem_req.size;
+			}
+			mem_req.size = offsets[i] + req.size;
+			mem_req.memoryTypeBits |= req.memoryTypeBits;
+		}
+		VkDeviceSize t = mem_req.size % mem_req.alignment;
+		if (t != 0) {
+			mem_req.size += mem_req.alignment - t;
+		}
+		VkDeviceMemory memory = allocateMemory(device, physicalDevice, mem_req, properties);
+		for (uint32_t i = 0; i < bufferCount; ++i) {
+			vkBindBufferMemory(device, buffers[i], memory, offsets[i]);
+		}
+		return memory;
 	}
 	inline VkDeviceMemory allocateAndBind(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t bufferCount, const VkBuffer* buffers, uint32_t imageCount, const VkImage* images, VkMemoryPropertyFlags properties) {
 		VkMemoryRequirements mem_req{};

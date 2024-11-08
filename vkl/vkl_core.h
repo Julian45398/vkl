@@ -19,12 +19,13 @@
 
 #ifdef VKL_CHECK_SUCCESS
 #ifndef VKL_FAILED
-#error it is required to define the procedure on failure if success checks are enabled!
-#define VKL_FAILED(ERROR_MSG)
+#error it is required to define: VKL_FAILED(VK_RETURN, ERROR_MSG) to handle failures
+#define VKL_FAILED(VK_RETURN, ERROR_MSG)
 #endif
 #define VKL_CHECK(X, ERROR_MSG) do {if (X != VK_SUCCESS) { VKL_FAILED(ERROR_MSG); } } while (0)
 #else
 #define VKL_CHECK(X, ERROR_MSG) do { X; } while (0)
+#define VKL_FAILED(VK_RETURN, ERROR_MSG)
 #endif
 
 #define VKL_FLAG_NONE 0

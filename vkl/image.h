@@ -21,7 +21,7 @@ namespace vkl {
 	}
 	inline VkSampler createSampler(VkDevice device, const VkSamplerCreateInfo& info) {
 		VkSampler sampler;
-		VKL_CHECK(vkCreateSampler(device, &info, VKL_Callbacks, &sampler));
+		VKL_CHECK(vkCreateSampler(device, &info, VKL_Callbacks, &sampler), VKL_ERROR_SAMPLER_CREATION_FAILED);
 		return sampler;
 	}
 	inline VkSampler createSampler(VkDevice device, VkFilter filterType, VkSamplerMipmapMode mipmapMode, VkSamplerAddressMode addressMode,
@@ -37,9 +37,6 @@ namespace vkl {
 			anisotropyEnable, maxAnisotropy, compareEnable, compareOp, minLod, maxLod, borderColor, unnormalizedCoordinates, flags, pNext);
 		return createSampler(device, info);
 	}
-		
-	
-
 	inline VkImageCreateInfo createImageInfo(VkImageType imageType, VkFormat format, VkExtent3D extent, uint32_t mipLevels, uint32_t arrayLayers, VkSampleCountFlags samples, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO, pNext,

@@ -32,7 +32,12 @@ namespace vkl {
 		return module;
 	}
 	inline void destroyShaderModule(VkDevice device, VkShaderModule module) {
-		VKL_CHECK(vkDestroyShaderModule(device, module, VKL_Callbacks));
+		vkDestroyShaderModule(device, module, VKL_Callbacks);
+	}
+	inline VkPipelineShaderStageCreateInfo createPipelineShaderStageInfo(VkShaderStageFlagBits stage, VkShaderModule module, const char* pName, const VkSpecializationInfo* pSpecializationInfo = nullptr, VkPipelineShaderStageCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
+		return {
+			VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, pNext, flags, stage, module, pName, pSpecializationInfo
+		};
 	}
 	inline VkPipelineShaderStageCreateInfo createPipelineShaderStageInfo(VkShaderStageFlagBits stage, VkShaderModule module, const VkSpecializationInfo* pSpecializationInfo = nullptr, VkPipelineShaderStageCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {

@@ -18,4 +18,7 @@ namespace vkl {
 	const char VKL_ERROR_SEMAPHORE_CREATION_FAILED[] = "failed to create semaphore";
 	const char VKL_ERROR_COMMANDBUFFER_CREATION_FAILED[] = "failed to create command buffer";
 	const char VKL_ERROR_COMMANDPOOL_CREATION_FAILED[] = "failed to create command pool";
+	const char VKL_ERROR_COMMANDPOOL_RESET_FAILED[] = "failed to reset command pool";
+	const char VKL_ERROR_BUFFER_MEMORY_REQ_ACQUIRED_FAILED[] = "filed to acquire buffer memory requirements";
+	const char VKL_ERROR_IMAGE_MEMORY_REQ_ACQUIRED_FAILED[] = "filed to acquire image memory requirements";
 }
