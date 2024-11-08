@@ -165,4 +165,10 @@ namespace vkl {
 	inline void freeMemory(VkDevice device, VkDeviceMemory memory) {
 		vkFreeMemory(device, memory, VKL_Callbacks);
 	}
+	inline const char VKL_ERROR_MEMORY_MAPPING_FAILED[] = "failed to map memory!";
+	inline void* mapMemory(VkDevice device, VkDeviceMemory memory, VkDeviceSize size, VkDeviceSize offset, VkMemoryMapFlags flags = VKL_FLAG_NONE) {
+		void* mapped_memory;
+		VKL_CHECK(vkMapMemory(device, memory, offset, size, flags, &mapped_memory), VKL_ERROR_MEMORY_MAPPING_FAILED);
+		return mapped_memory;
+	}
 }
