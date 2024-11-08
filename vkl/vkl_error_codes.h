@@ -21,5 +21,8 @@ namespace vkl {
 	inline const char VKL_ERROR_COMMANDPOOL_RESET_FAILED[] = "failed to reset command pool";
 	inline const char VKL_ERROR_BUFFER_MEMORY_REQ_ACQUIRED_FAILED[] = "filed to acquire buffer memory requirements";
 	inline const char VKL_ERROR_IMAGE_MEMORY_REQ_ACQUIRED_FAILED[] = "filed to acquire image memory requirements";
-	inline const char VKL_ERROR_MEMORY_MAPPING_FAILED[] = "failed to map memory!";
+	inline const char VKL_ERROR_MEMORY_MAPPING_FAILED[] = "failed to map memory";
+	inline const char VKL_ERROR_COMMANDBUFFER_END_FAILED[] = "failed to end commandbuffer";
+	inline const char VKL_ERROR_COMMANDBUFFER_BEGIN_FAILED[] = "failed to begin commandbuffer";
+	inline const char VKL_ERROR_QUEUE_SUBMIT_FAILED[] = "failed to submit commands";
 }

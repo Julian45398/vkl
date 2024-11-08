@@ -46,16 +46,59 @@ namespace vkl {
 			VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO, pNext, flags, pInheritanceInfo
 		};
 	}
-	inline VkResult beginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo& info) {
-		return vkBeginCommandBuffer(commandBuffer, &info);
+	inline void beginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo& info) {
+		VKL_CHECK(vkBeginCommandBuffer(commandBuffer, &info), VKL_ERROR_COMMANDBUFFER_BEGIN_FAILED);
 	}
-	inline VkResult beginCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferUsageFlags flags, const VkCommandBufferInheritanceInfo* pInheritanceInfo = nullptr, const void* pNext = nullptr) {
+	inline void beginCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferUsageFlags flags, const VkCommandBufferInheritanceInfo* pInheritanceInfo = nullptr, const void* pNext = nullptr) {
 		VkCommandBufferBeginInfo info = createCommandBufferBeginInfo(flags, pInheritanceInfo, pNext);
-		return vkBeginCommandBuffer(commandBuffer, &info);
+		VKL_CHECK(vkBeginCommandBuffer(commandBuffer, &info), VKL_ERROR_COMMANDBUFFER_BEGIN_FAILED);
+	}
+	inline void endCommandBuffer(VkCommandBuffer commandBuffer) {
+		VKL_CHECK(vkEndCommandBuffer(commandBuffer), VKL_ERROR_COMMANDBUFFER_END_FAILED);
 	}
 	inline VkCommandBufferInheritanceInfo createCommandBufferInheritanceInfo(VkRenderPass renderPass, uint32_t subpass, VkFramebuffer framebuffer = VK_NULL_HANDLE, VkBool32 occlusionQueryEnable = VK_FALSE, VkQueryControlFlags queryFlags = VKL_FLAG_NONE, VkQueryPipelineStatisticFlags pipelineStatistics = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO, pNext, renderPass, subpass, framebuffer, occlusionQueryEnable, queryFlags, pipelineStatistics
 		};
+	}
+	inline VkSubmitInfo createSubmitInfo(uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers,
+		uint32_t waitSemaphoreCount, const VkSemaphore* pWaitSemaphores, const VkPipelineStageFlags* pWaitDstStageMask,
+		uint32_t signalSemaphoreCount, const VkSemaphore* pSignalSemaphores, const void* pNext = nullptr) {
+		return {
+			VK_STRUCTURE_TYPE_SUBMIT_INFO,
+			pNext,
+			waitSemaphoreCount,
+			pWaitSemaphores,
+			pWaitDstStageMask,
+			commandBufferCount,
+			pCommandBuffers,
+			signalSemaphoreCount,
+			pSignalSemaphores
+		};
+	}
+	inline void submitCommands(VkQueue queue, VkCommandBuffer commands, VkFence fence) {
+		VkSubmitInfo info = createSubmitInfo(1, &commands, 0, nullptr, nullptr, 0, nullptr);
+		VKL_CHECK(vkQueueSubmit(queue, 1, &info, fence), VKL_ERROR_QUEUE_SUBMIT_FAILED);
+	}
+	inline void submitCommands(VkQueue queue, VkCommandBuffer commands, VkSemaphore waitSemaphore, VkPipelineStageFlags waitStage, VkSemaphore signalSemaphore, VkFence fence) {
+		VkSubmitInfo info = createSubmitInfo(1, &commands, 1, &waitSemaphore, &waitStage, 1, &signalSemaphore);
+		VKL_CHECK(vkQueueSubmit(queue, 1, &info, fence), VKL_ERROR_QUEUE_SUBMIT_FAILED);
+	}
+	inline void submitCommands(VkQueue queue, VkCommandBuffer commands, uint32_t waitCount, const VkSemaphore* pWaitSemaphore, const VkPipelineStageFlags* pWaitStage,
+		uint32_t signalCount, const VkSemaphore* pSignalSemaphore, VkFence fence) {
+		VkSubmitInfo info = createSubmitInfo(1, &commands, waitCount, pWaitSemaphore, pWaitStage, signalCount, pSignalSemaphore);
+		VKL_CHECK(vkQueueSubmit(queue, 1, &info, fence), VKL_ERROR_QUEUE_SUBMIT_FAILED);
+	}
+	inline void submitCommands(VkQueue queue, uint32_t commandBufferCount, const VkCommandBuffer* pCommands, uint32_t waitCount, const VkSemaphore* pWaitSemaphore, const VkPipelineStageFlags* pWaitStage,
+		uint32_t signalCount, const VkSemaphore* pSignalSemaphore, VkFence fence) {
+		VkSubmitInfo info = createSubmitInfo(commandBufferCount, pCommands, waitCount, pWaitSemaphore, pWaitStage, signalCount, pSignalSemaphore);
+		VKL_CHECK(vkQueueSubmit(queue, 1, &info, fence), VKL_ERROR_QUEUE_SUBMIT_FAILED);
+	}
+	inline void submitCommands(VkQueue queue, const VkSubmitInfo& submitInfo, VkFence fence) {
+		VKL_CHECK(vkQueueSubmit(queue, 1, &submitInfo, fence), VKL_ERROR_QUEUE_SUBMIT_FAILED);
+	}
+	inline void submitCommands(VkQueue queue, uint32_t commandBufferCount, const VkCommandBuffer* pCommands, VkFence fence) {
+		VkSubmitInfo info = createSubmitInfo(commandBufferCount, pCommands, 0, nullptr, nullptr, 0, nullptr);
+		VKL_CHECK(vkQueueSubmit(queue, 1, &info, fence), VKL_ERROR_QUEUE_SUBMIT_FAILED);
 	}
 }
