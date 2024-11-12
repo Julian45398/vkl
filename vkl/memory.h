@@ -7,14 +7,14 @@ namespace vkl {
 		assert(device != VK_NULL_HANDLE);
 		assert(buffer != VK_NULL_HANDLE);
 		VkMemoryRequirements req;
-		VKL_CHECK(vkGetBufferMemoryRequirements(device, buffer, &req), VKL_ERROR_BUFFER_MEMORY_REQ_ACQUIRED_FAILED);
+		vkGetBufferMemoryRequirements(device, buffer, &req);
 		return req;
 	}
 	inline VkMemoryRequirements getImageMemoryRequirements(VkDevice device, VkImage image) {
 		assert(device != VK_NULL_HANDLE);
 		assert(image != VK_NULL_HANDLE);
 		VkMemoryRequirements req;
-		VKL_CHECK(vkGetImageMemoryRequirements(device, image, &req), VKL_ERROR_IMAGE_MEMORY_REQ_ACQUIRED_FAILED);
+		vkGetImageMemoryRequirements(device, image, &req);
 		return req;
 	}
 	inline VkPhysicalDeviceMemoryProperties getPhysicalDeviceMemoryProperties(VkPhysicalDevice physicalDevice) {
