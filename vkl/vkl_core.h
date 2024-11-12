@@ -3,13 +3,13 @@
 #include <vulkan/vulkan.h>
 
 #ifndef VKL_ENGINE_NAME
-#define VKL_ENGINE_NAME "vkl"
+#define VKL_ENGINE_NAME "vkl engine"
 #endif
 #ifndef VKL_ENGINE_VERSION
 #define VKL_ENGINE_VERSION VK_MAKE_API_VERSION(0, 0, 0, 1)
 #endif
 #ifndef VKL_APPLICATION_NAME
-#define VKL_APPLICATION_NAME "vkl"
+#define VKL_APPLICATION_NAME "vkl app"
 #endif
 #ifndef VKL_APPLICATION_VERSION
 #define VKL_APPLICATION_VERSION VK_MAKE_API_VERSION(0, 0, 0, 1)
@@ -22,7 +22,7 @@
 #error it is required to define: VKL_FAILED(VK_RETURN, ERROR_MSG) to handle failures
 #define VKL_FAILED(VK_RETURN, ERROR_MSG)
 #endif
-#define VKL_CHECK(X, ERROR_MSG) do {if (X != VK_SUCCESS) { VKL_FAILED(ERROR_MSG); } } while (0)
+#define VKL_CHECK(X, ERROR_MSG) do {if (X != VK_SUCCESS) { VKL_FAILED(X, ERROR_MSG); } } while (0)
 #else
 #define VKL_CHECK(X, ERROR_MSG) do { X; } while (0)
 #define VKL_FAILED(VK_RETURN, ERROR_MSG)
