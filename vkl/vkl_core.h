@@ -22,7 +22,7 @@
 #error it is required to define: VKL_FAILED(VK_RETURN, ERROR_MSG) to handle failures
 #define VKL_FAILED(VK_RETURN, ERROR_MSG)
 #endif
-#define VKL_CHECK(X, ERROR_MSG) do {if (X != VK_SUCCESS) { VKL_FAILED(X, ERROR_MSG); } } while (0)
+#define VKL_CHECK(X, ERROR_MSG) do {VkResult res = X; if (res != VK_SUCCESS) { VKL_FAILED(res, ERROR_MSG); } } while (0)
 #else
 #define VKL_CHECK(X, ERROR_MSG) do { X; } while (0)
 #define VKL_FAILED(VK_RETURN, ERROR_MSG)
