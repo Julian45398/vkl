@@ -28,4 +28,5 @@ namespace vkl {
 	inline const char VKL_ERROR_COMMANDBUFFER_END_FAILED[] = "failed to end commandbuffer";
 	inline const char VKL_ERROR_COMMANDBUFFER_BEGIN_FAILED[] = "failed to begin commandbuffer";
 	inline const char VKL_ERROR_QUEUE_SUBMIT_FAILED[] = "failed to submit commands";
+	inline const char VKL_ERROR_IMAGE_ACQUIRING_FAILED[] = "failed to acquire swapchain image";
 }
