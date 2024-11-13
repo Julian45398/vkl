@@ -19,7 +19,7 @@ namespace vkl {
 		VKL_CHECK(vkWaitForFences(device, fenceCount, pFences, waitAll, timeout), VKL_ERROR_FENCE_WAIT_FAILED);
 	}
 	inline void destroyFence(VkDevice device, VkFence fence) {
-		VKL_CHECK(vkDestroyFence(device, fence, VKL_Callbacks), VKL_ERROR_FENCE_DESTRUCTION_FAILED);
+		vkDestroyFence(device, fence, VKL_Callbacks);
 	}
 	inline VkSemaphore createSemaphore(VkDevice device, VkSemaphoreCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		VkSemaphore semaphore;
@@ -31,6 +31,6 @@ namespace vkl {
 		return semaphore;
 	}
 	inline void destroySemaphore(VkDevice device, VkSemaphore semaphore) {
-		VKL_CHECK(vkDestroySemaphore(device, semaphore, VKL_Callbacks), VKL_ERROR_SEMAPHORE_DESTRUCTION_FAILED);
+		vkDestroySemaphore(device, semaphore, VKL_Callbacks);
 	}
 }

@@ -15,10 +15,8 @@ namespace vkl {
 	inline const char VKL_ERROR_BUFFER_CREATION_FAILED[] = "failed to create buffer";
 	inline const char VKL_ERROR_MEMORY_ALLOCATION_FAILED[] = "failed to allocate memory";
 	inline const char VKL_ERROR_FENCE_CREATION_FAILED[] = "failed to create fence";
-	inline const char VKL_ERROR_FENCE_DESTRUCTION_FAILED[] = "failed to destruction fence";
 	inline const char VKL_ERROR_FENCE_WAIT_FAILED[] = "failed to wait for fence";
 	inline const char VKL_ERROR_SEMAPHORE_CREATION_FAILED[] = "failed to create semaphore";
-	inline const char VKL_ERROR_SEMAPHORE_DESTRUCTION_FAILED[] = "failed to destroy semaphore";
 	inline const char VKL_ERROR_COMMANDBUFFER_CREATION_FAILED[] = "failed to create command buffer";
 	inline const char VKL_ERROR_COMMANDPOOL_CREATION_FAILED[] = "failed to create command pool";
 	inline const char VKL_ERROR_COMMANDPOOL_RESET_FAILED[] = "failed to reset command pool";
