@@ -59,16 +59,25 @@ namespace vkl {
 		VKL_CHECK(vkCreateImageView(device, &info, VKL_Callbacks, &view), VKL_ERROR_IMAGE_VIEW_CREATION_FAILED);
 		return view;
 	}
+	inline VkImageView createImageView(VkDevice device, VkImage image, VkFormat format = VK_FORMAT_R8G8B8A8_SRGB, VkImageAspectFlags imageAspect = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t mipLevel = 0, uint32_t levelCount = 1, uint32_t arrayLayer = 0, uint32_t layerCount = 1, VkImageViewType viewType = VK_IMAGE_VIEW_TYPE_2D) {
+		return vkl::createImageView(device, image, viewType, format, { VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY }, { imageAspect, mipLevel, levelCount, arrayLayer, layerCount });
+	}
+	inline VkImageView createImageView(VkDevice device, VkImage image, VkFormat format, const VkImageSubresourceRange& subresourceRange, VkImageViewType viewType = VK_IMAGE_VIEW_TYPE_2D) {
+		return vkl::createImageView(device, image, viewType, format, { VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY }, subresourceRange);
+	}
 	inline VkImage createImage(VkDevice device, const VkImageCreateInfo& info) {
 		VkImage image;
 		VKL_CHECK(vkCreateImage(device, &info, VKL_Callbacks, &image), VKL_ERROR_IMAGE_CREATION_FAILED);
 		return image;
 	}
-	inline VkImage createImage(VkDevice device, VkImageType imageType, VkFormat format, VkExtent3D extent, uint32_t mipLevels, uint32_t arrayLayers, VkSampleCountFlags samples, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
+	inline VkImage createImage(VkDevice device, VkImageType imageType, VkFormat format, const VkExtent3D& extent, VkImageUsageFlags usage, uint32_t mipLevels = 1, uint32_t arrayLayers = 1, VkSampleCountFlags samples = VK_SAMPLE_COUNT_1_BIT, VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL, VkImageCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		VkImageCreateInfo info = createImageInfo(imageType, format, extent, mipLevels, arrayLayers, samples, tiling, usage, flags, pNext);
 		VkImage image;
 		VKL_CHECK(vkCreateImage(device, &info, VKL_Callbacks, &image), VKL_ERROR_IMAGE_CREATION_FAILED);
 		return image;
+	}
+	inline VkImage createImage2D(VkDevice device, VkFormat format, uint32_t width, uint32_t height, VkImageUsageFlags usage, uint32_t mipLevels = 1, uint32_t arrayLayers = 1, VkSampleCountFlags samples = VK_SAMPLE_COUNT_1_BIT, VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL, VkImageCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
+		return createImage(device, VK_IMAGE_TYPE_2D, format, { width, height, 1 }, usage, mipLevels, arrayLayers, samples, tiling, flags, pNext);
 	}
 	inline void destroyImage(VkDevice device, VkImage image) {
 		vkDestroyImage(device, image, VKL_Callbacks);

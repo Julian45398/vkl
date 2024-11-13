@@ -15,6 +15,10 @@ namespace vkl {
 		VKL_CHECK(vkCreatePipelineLayout(device, &createInfo, VKL_Callbacks, &layout), VKL_ERROR_PIPELINE_LAYOUT_CREATION_FAILED);
 		return layout;
 	}
+	inline VkPipelineLayout createPipelineLayout(VkDevice device, uint32_t descriptorCount, const VkDescriptorSetLayout* descriptorLayouts, uint32_t pushConstantCount = 0, const VkPushConstantRange* ranges = nullptr) {
+		VkPipelineLayoutCreateInfo info = createPipelineLayoutCreateInfo(descriptorCount, descriptorLayouts, pushConstantCount, ranges);
+		return vkl::createPipelineLayout(device, info);
+	}
 	inline VkShaderModuleCreateInfo createShaderModuleInfo(size_t codeSize, const uint32_t* pCode, VkShaderModuleCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO, pNext, flags, codeSize, pCode
