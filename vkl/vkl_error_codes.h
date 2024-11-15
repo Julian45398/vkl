@@ -16,6 +16,7 @@ namespace vkl {
 	inline const char VKL_ERROR_MEMORY_ALLOCATION_FAILED[] = "failed to allocate memory";
 	inline const char VKL_ERROR_FENCE_CREATION_FAILED[] = "failed to create fence";
 	inline const char VKL_ERROR_FENCE_WAIT_FAILED[] = "failed to wait for fence";
+	inline const char VKL_ERROR_FENCE_RESET_FAILED[] = "failed to reset fence";
 	inline const char VKL_ERROR_SEMAPHORE_CREATION_FAILED[] = "failed to create semaphore";
 	inline const char VKL_ERROR_COMMANDBUFFER_CREATION_FAILED[] = "failed to create command buffer";
 	inline const char VKL_ERROR_COMMANDPOOL_CREATION_FAILED[] = "failed to create command pool";
@@ -28,4 +29,8 @@ namespace vkl {
 	inline const char VKL_ERROR_QUEUE_SUBMIT_FAILED[] = "failed to submit commands";
 	inline const char VKL_ERROR_IMAGE_ACQUIRING_FAILED[] = "failed to acquire swapchain image";
 	inline const char VKL_ERROR_SAMPLER_CREATION_FAILED[] = "failed to create sampler";
+	inline const char VKL_ERROR_DESCRIPTOR_POOL_CREATION_FAILED[] = "failed to create descriptor pool";
+	inline const char VKL_ERROR_DESCRIPTOR_SET_LAYOUT_CREATION_FAILED[] = "failed to create descriptor set layout";
+	inline const char VKL_ERROR_DESCRIPTOR_SET_ALLOCATION_FAILED[] = "failed to allocate descriptor set";
+	inline const char VKL_ERROR_DESCRIPTOR_UPDATE_FAILED[] = "failed to update descriptor set";
 }

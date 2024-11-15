@@ -18,6 +18,9 @@ namespace vkl {
 	inline void waitForFences(VkDevice device, uint32_t fenceCount, const VkFence* pFences, VkBool32 waitAll = VK_TRUE, uint64_t timeout = UINT64_MAX) {
 		VKL_CHECK(vkWaitForFences(device, fenceCount, pFences, waitAll, timeout), VKL_ERROR_FENCE_WAIT_FAILED);
 	}
+	inline void resetFence(VkDevice device, VkFence fence) {
+		VKL_CHECK(vkResetFences(device, 1, &fence), VKL_ERROR_FENCE_RESET_FAILED);
+	}
 	inline void destroyFence(VkDevice device, VkFence fence) {
 		vkDestroyFence(device, fence, VKL_Callbacks);
 	}
