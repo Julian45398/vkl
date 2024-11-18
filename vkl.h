@@ -11,4 +11,5 @@
 #include "vkl/pipeline.h"
 #include "vkl/commands.h"
 #include "vkl/synchronization.h"
+#include "vkl/descriptor.h"
 
