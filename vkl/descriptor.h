@@ -19,7 +19,7 @@ namespace vkl {
 		return pool;
 	}
 	inline VkDescriptorPool createDescriptorPool(VkDevice device, uint32_t maxSets, uint32_t poolSizeCount, const VkDescriptorPoolSize* pPoolSizes, VkDescriptorPoolCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
-		return createDescriptorPool(device, createDescriptorPoolInfo(maxSets, poolSizeCount, pPoolSizes, flags, pNext);
+		return createDescriptorPool(device, createDescriptorPoolInfo(maxSets, poolSizeCount, pPoolSizes, flags, pNext));
 	}
 	inline VkDescriptorSetLayoutCreateInfo createDescriptorSetLayoutInfo(uint32_t bindingCount, const VkDescriptorSetLayoutBinding* pBindings, VkDescriptorSetLayoutCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
