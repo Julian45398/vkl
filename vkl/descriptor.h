@@ -65,7 +65,4 @@ namespace vkl {
 			VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, pNext, dstSet, dstBinding, dstArrayElement, descriptorCount, descriptorType, nullptr, nullptr, pBufferViews 
 		};
 	}
-	inline void updateDescriptorSet(VkDevice device, uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount = 0, const VkCopyDescriptorSet* pDescriptorCopies = nullptr) {
-		VKL_CHECK(vkUpdateDescriptorSets(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies), VKL_ERROR_DESCRIPTOR_UPDATE_FAILED);
-	}
 }
