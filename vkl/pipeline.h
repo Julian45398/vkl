@@ -19,6 +19,9 @@ namespace vkl {
 		VkPipelineLayoutCreateInfo info = createPipelineLayoutCreateInfo(descriptorCount, descriptorLayouts, pushConstantCount, ranges);
 		return vkl::createPipelineLayout(device, info);
 	}
+	inline void destroyPipelineLayout(VkDevice device, VkPipelineLayout pipelineLayout) {
+		vkDestroyPipelineLayout(device, pipelineLayout, VKL_Callbacks);
+	}
 	inline VkShaderModuleCreateInfo createShaderModuleInfo(size_t codeSize, const uint32_t* pCode, VkShaderModuleCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO, pNext, flags, codeSize, pCode
@@ -153,5 +156,8 @@ namespace vkl {
 		VkPipeline pipeline;
 		VKL_CHECK(vkCreateComputePipelines(device, pipelineCache, 1, &info, VKL_Callbacks, &pipeline), VKL_ERROR_PIPELINE_CREATION_FAILED);
 		return pipeline;
+	}
+	inline void destroyPipeline(VkDevice device, VkPipeline pipeline) {
+		vkDestroyPipeline(device, pipeline, VKL_Callbacks);
 	}
 }
