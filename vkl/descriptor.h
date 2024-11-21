@@ -26,6 +26,9 @@ namespace vkl {
 			VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO, pNext, flags, bindingCount, pBindings
 		};
 	}
+	inline void destroyDescriptorPool(VkDevice device, VkDescriptorPool descriptorPool) {
+		vkDestroyDescriptorPool(device, descriptorPool, VKL_Callbacks);
+	}
 	inline VkDescriptorSetLayout createDescriptorSetLayout(VkDevice device, const VkDescriptorSetLayoutCreateInfo& info) {
 		VkDescriptorSetLayout layout;
 		VKL_CHECK(vkCreateDescriptorSetLayout(device, &info, VKL_Callbacks, &layout), VKL_ERROR_DESCRIPTOR_SET_LAYOUT_CREATION_FAILED);
@@ -36,6 +39,9 @@ namespace vkl {
 	}
 	inline VkDescriptorSetAllocateInfo createDescriptorSetAllocateInfo(VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, const VkDescriptorSetLayout* pSetLayouts, const void* pNext = nullptr) {
 		return { VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO, pNext, descriptorPool, descriptorSetCount, pSetLayouts };
+	}
+	inline void destroyDescriptorSetLayout(VkDevice device, VkDescriptorSetLayout descriptorSetLayout) {
+		vkDestroyDescriptorSetLayout(device, descriptorSetLayout, VKL_Callbacks);
 	}
 	inline VkDescriptorSet allocateDescriptorSet(VkDevice device, const VkDescriptorSetAllocateInfo& info) {
 		VkDescriptorSet set;
