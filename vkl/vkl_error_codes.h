@@ -14,6 +14,8 @@ namespace vkl {
 	inline const char VKL_ERROR_IMAGE_VIEW_CREATION_FAILED[] = "failed to create image view";
 	inline const char VKL_ERROR_BUFFER_CREATION_FAILED[] = "failed to create buffer";
 	inline const char VKL_ERROR_MEMORY_ALLOCATION_FAILED[] = "failed to allocate memory";
+	inline const char VKL_ERROR_BIND_BUFFER_FAILED[] = "failed to bind buffer memory";
+	inline const char VKL_ERROR_BIND_IMAGE_FAILED[] = "failed to bind image memory";
 	inline const char VKL_ERROR_FENCE_CREATION_FAILED[] = "failed to create fence";
 	inline const char VKL_ERROR_FENCE_WAIT_FAILED[] = "failed to wait for fence";
 	inline const char VKL_ERROR_FENCE_RESET_FAILED[] = "failed to reset fence";

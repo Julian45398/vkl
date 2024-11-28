@@ -54,11 +54,21 @@ namespace vkl {
 	inline VkDeviceMemory allocateMemory(VkDevice device, VkPhysicalDevice physicalDevice, const VkMemoryRequirements& memoryRequirements, VkMemoryPropertyFlags properties) {
 		return allocateMemory(device, memoryRequirements.size, findMemoryType(physicalDevice, memoryRequirements.memoryTypeBits, properties));
 	}
+	inline void bindBufferMemory(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize offset = 0) {
+		VKL_CHECK(vkBindBufferMemory(device, buffer, memory, offset), VKL_ERROR_BIND_BUFFER_FAILED);
+	}
+	inline void bindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize offset = 0) {
+		VKL_CHECK(vkBindImageMemory(device, image, memory, offset), VKL_ERROR_BIND_IMAGE_FAILED);
+	}
 	inline VkDeviceMemory allocateForBuffer(VkDevice device, VkPhysicalDevice physicalDevice, VkBuffer buffer, VkMemoryPropertyFlags properties) {
-		return allocateMemory(device, physicalDevice, vkl::getBufferMemoryRequirements(device, buffer), properties);
+		VkDeviceMemory mem = allocateMemory(device, physicalDevice, vkl::getBufferMemoryRequirements(device, buffer), properties);
+		bindBufferMemory(device, buffer, mem);
+		return mem;
 	}
 	inline VkDeviceMemory allocateForImage(VkDevice device, VkPhysicalDevice physicalDevice, VkImage image, VkMemoryPropertyFlags properties) {
-		return allocateMemory(device, physicalDevice, getImageMemoryRequirements(device, image), properties);
+		VkDeviceMemory mem = allocateMemory(device, physicalDevice, getImageMemoryRequirements(device, image), properties);
+		bindImageMemory(device, image, mem, 0);
+		return mem;
 	}
 	inline VkDeviceMemory allocateAndBind(VkDevice device, VkPhysicalDevice physicalDevice, uint32_t imageCount, const VkImage* images, VkMemoryPropertyFlags properties) {
 		VkMemoryRequirements mem_req{};
