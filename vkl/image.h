@@ -37,6 +37,9 @@ namespace vkl {
 			anisotropyEnable, maxAnisotropy, compareEnable, compareOp, minLod, maxLod, borderColor, unnormalizedCoordinates, flags, pNext);
 		return createSampler(device, info);
 	}
+	inline void destroySampler(VkDevice device, VkSampler sampler) {
+		VKL_CHECK(vkDestroySampler(device, sampler, VKL_Callbacks), VKL_ERROR_SAMPLER_DESTRUCTION_FAILED);
+	}
 	inline VkImageCreateInfo createImageInfo(VkImageType imageType, VkFormat format, VkExtent3D extent, uint32_t mipLevels, uint32_t arrayLayers, VkSampleCountFlags samples, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags = VKL_FLAG_NONE, const void* pNext = nullptr) {
 		return {
 			VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO, pNext,
