@@ -31,7 +31,6 @@ namespace vkl {
 	inline const char VKL_ERROR_QUEUE_SUBMIT_FAILED[] = "failed to submit commands";
 	inline const char VKL_ERROR_IMAGE_ACQUIRING_FAILED[] = "failed to acquire swapchain image";
 	inline const char VKL_ERROR_SAMPLER_CREATION_FAILED[] = "failed to create sampler";
-	inline const char VKL_ERROR_SAMPLER_DESTRUCTION_FAILED[] = "failed to destroy sampler";
 	inline const char VKL_ERROR_DESCRIPTOR_POOL_CREATION_FAILED[] = "failed to create descriptor pool";
 	inline const char VKL_ERROR_DESCRIPTOR_SET_LAYOUT_CREATION_FAILED[] = "failed to create descriptor set layout";
 	inline const char VKL_ERROR_DESCRIPTOR_SET_ALLOCATION_FAILED[] = "failed to allocate descriptor set";
