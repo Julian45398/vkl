@@ -137,7 +137,9 @@ namespace vkl {
 		suitable_devices.shrink_to_fit();
 		return suitable_devices;
 	}
-	inline VkDevice createDevice(const VkPhysicalDevice physical_device, const VkSurfaceKHR surface, const VkPhysicalDeviceFeatures& enabledFeatures, uint32_t extensionCount, const char* const* pExtensions, uint32_t queueInfoCount, VkDeviceQueueCreateInfo* pQueueCreateInfos) {
+
+	inline VkDevice createDevice(const VkPhysicalDevice physical_device, const VkSurfaceKHR surface, const VkPhysicalDeviceFeatures& enabledFeatures, 
+		uint32_t extensionCount, const char* const* pExtensions, uint32_t queueInfoCount, VkDeviceQueueCreateInfo* pQueueCreateInfos, bool validationEnabled = false) {
 		VkDeviceCreateInfo create_info{};
 		create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 		create_info.queueCreateInfoCount = queueInfoCount;
@@ -146,13 +148,14 @@ namespace vkl {
 		create_info.enabledExtensionCount = extensionCount;
 		create_info.ppEnabledExtensionNames = pExtensions;
 
-#ifdef VKL_ENABLE_VALIDATION
-		create_info.enabledLayerCount = 1;
-		create_info.ppEnabledLayerNames = &VKL_VALIDATION_LAYER_NAME;
-#else
-		create_info.enabledLayerCount = 0;
-#endif
-		VkDevice device = VK_NULL_HANDLE;
+		if (validationEnabled) {
+			create_info.enabledLayerCount = 1;
+			create_info.ppEnabledLayerNames = &VKL_VALIDATION_LAYER_NAME;
+		} else {
+			create_info.enabledLayerCount = 0;
+		}
+
+		VkDevice device;
 		VKL_CHECK(vkCreateDevice(physical_device, &create_info, VKL_Callbacks, &device), VKL_ERROR_DEVICE_CREATION_FAILED);
 		return device;
 	}

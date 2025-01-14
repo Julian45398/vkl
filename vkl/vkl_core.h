@@ -30,10 +30,10 @@
 
 #define VKL_FLAG_NONE 0
 
+
 namespace vkl {
-#ifdef VKL_ENABLE_VALIDATION
 	inline const char* VKL_VALIDATION_LAYER_NAME = "VK_LAYER_KHRONOS_validation";
-#endif
+
 	inline const VkAllocationCallbacks* VKL_Callbacks = nullptr;
 	inline void setAllocationCallbacks(const VkAllocationCallbacks* pCallbacks) {
 		VKL_Callbacks = pCallbacks;
