@@ -28,6 +28,9 @@ namespace vkl {
 			func(instance, messenger, VKL_Callbacks);
 		}
 	}
+	inline void destroySurface(const VkInstance instance, VkSurfaceKHR surface) {
+		vkDestroySurfaceKHR(instance, surface, VKL_Callbacks);
+	}
 
 	inline VkInstance createInstance(uint32_t apiVersion, uint32_t extensionCount, const char* const* pExtensions, PFN_vkDebugUtilsMessengerCallbackEXT debugCallback = nullptr) {
 		assert(!(pExtensions == nullptr && extensionCount != 0));
